@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+from src.controllers import main_controller
 
 frame_color = '#575555'
+background_color = '#2a2a2a'
 
 class MainWindow(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -10,7 +12,7 @@ class MainWindow(tk.Tk):
         self.resizable(True, True)
         self.minsize(800, 600)
         self.config(
-            background='#2a2a2a',
+            background= background_color,
             padx=20,
             pady=20
         )
@@ -58,22 +60,31 @@ class ActionsFrame(tk.Frame):
         
         self.new_receipt_button = tk.Button(
             self,
-            text='Adicionar'
+            text='Adicionar',
+            command=main_controller.show_new_receipt_window
         )
         tk.Label(self, text='Imagem').grid(row=0, column=0)
         tk.Label(self, text='Imagem').grid(row=0, column=1)
         tk.Label(self, text='Imagem').grid(row=0, column=2)
+        tk.Label(self, text='Imagem').grid(row=0, column=3)
         self.new_receipt_button.grid(row=1, column=0)
         self.edit_receipt = tk.Button(
             self,
-            text='Editar'
+            text='Editar',
+            command=main_controller.show_edit_receipt_window
         )
         self.edit_receipt.grid(row=1, column=1)
+        self.search_receipt = tk.Button(
+            self,
+            text='Buscar',
+            command=main_controller.show_search_receipt_window
+        )
+        self.search_receipt.grid(row=1, column=2)
         self.print_receipt = tk.Button(
             self,
             text='Imprimir'
         )
-        self.print_receipt.grid(row=1, column=2)
+        self.print_receipt.grid(row=1, column=3)
 
 class ReceiptsFrame(tk.Frame):
     def __init__(self, *args, **kwargs):
