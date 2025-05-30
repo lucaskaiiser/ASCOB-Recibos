@@ -7,14 +7,15 @@ class SearchReceiptWindow(tk.Toplevel):
         self.geometry('800x600')
 
         self.search_receipt_form = SearchReceiptForm(self)
-        self.search_receipt_form.grid(row=0, column=0, sticky='nsew')
+        self.search_receipt_form.grid(row=0, column=0)
 
         self.actions_search_receipt = ActionsSearchReceipt(self)
-        self.actions_search_receipt.grid(row=1, column=0, sticky='nsew')
+        self.actions_search_receipt.grid(row=1, column=0,)
 
         self.result_text = tk.Text(self, height=10, width=50, state='disabled')
         self.result_text.grid(row=2, column=0)
 
+        self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.grid_rowconfigure(2, weight=1)
@@ -27,7 +28,7 @@ class SearchReceiptForm(tk.Frame):
 
         fields = [
             "Cliente",
-            "Número do Boleto",
+            "Devedor",
             "Data do Pagamento"
         ]
 
