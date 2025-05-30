@@ -1,18 +1,67 @@
 from .main import tk, ttk
+from datetime import datetime
 
 class NewReceiptWindow(tk.Toplevel):
     def __init__(self,*args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title('Novo Recibo')
         self.geometry('800x600')
-        self.label = tk.Label(
-            self, text='Janela de criar Recibo'
+
+        self.form_title = tk.Label(self, text="Novo Recibo")
+        self.form_title.grid(row=0, column=0)
+        self.create_receipt_form = CreateReceiptForm(self)
+        self.create_receipt_form.grid(row=1, column=0, sticky='nsew')
+
+        self.emission_date_label = tk.Label(
+            self, text=f'Data de emissão: {datetime.now().date()}'
         )
-        self.label.place(relx=0.1)
+        self.emission_date_label.grid(row=2, column=1)
+
+        self.actions_form = ActionsCreateReceipt(self)
+        self.actions_form.grid(row=3, column=0, sticky='nsew')
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=5)
+        self.grid_rowconfigure(2, weight=1)
         
+
 class CreateReceiptForm(tk.Frame):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        
+
+        self.inputs = {}
+
+        fields = [
+            ("Cliente", "client_name"),
+            ("Endereço", "address"),
+            ("Valor", "value"),
+            ("Por Extenso", "por_extenso"),
+            ("Devedor", "debtor_name"),
+            ("Número do Boleto", "bill_number"),
+            ("Vencimento do Boleto", "bill_due_date"),
+            ("Parcela", "installment_number"),
+            ("Vencimento da Parcela", "installment_due_date"),
+            ("Data do Pagamento", "payment_date"),
+            ("Observações", "description"),
+            ("Cobrador", "cobrador"),
+        ]
+
+        for i, (label_text, field_name) in enumerate(fields):
+            label = tk.Label(self, text=label_text)
+            label.grid(row=i, column=0, sticky='w')
+
+            entry = tk.Entry(self, width=30)
+            entry.grid(row=i, column=1)
+
+            self.inputs[field_name] = entry
 
 class ActionsCreateReceipt(tk.Frame):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
+        self.save_button = tk.Button(self, text='Salvar', command=self.master.destroy)
+        self.save_button.grid(row=0, column=0)
+        self.cancel_button = tk.Button(self, text='Cancelar', command=self.master.destroy)
+        self.cancel_button.grid(row=0, column=1)

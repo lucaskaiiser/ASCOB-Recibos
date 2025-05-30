@@ -1,5 +1,3 @@
-from src.models import Receipt
-
 def show_new_receipt_window():
     from src.windows import NewReceiptWindow
     new_receipt_window = NewReceiptWindow()
