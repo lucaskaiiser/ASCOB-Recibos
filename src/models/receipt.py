@@ -1,11 +1,12 @@
 from peewee import Model,CharField, DateField, FloatField, IntegerField
 from src.models import db
+from datetime import datetime
 
 class Receipt(Model):
 
     client_name = CharField()
     address = CharField()
-    date = DateField()
+    date = DateField(default=datetime.now().date())
     value = FloatField()
     debtor = CharField()
     por_extenso = CharField()

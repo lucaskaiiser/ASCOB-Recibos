@@ -72,7 +72,7 @@ class SearchReceiptWindow(tk.Toplevel):
             client=data.get('Cliente'),
             debtor=data.get('Devedor'),
             date=data.get('Data do Pagamento')
-        ).tuples()
+        )
         
 
         for item in receipts:

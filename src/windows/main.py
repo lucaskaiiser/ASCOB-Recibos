@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 
-
 frame_color = '#575555'
 background_color = '#2a2a2a'
 
@@ -64,7 +63,7 @@ class ActionsFrame(tk.Frame):
         self.new_receipt_button = tk.Button(
             self,
             text='Adicionar',
-            command=self.wm.show_new_receipt_window
+            command=lambda: self.wm.show_new_receipt_window(master = self.master)
         )
             
         tk.Label(self, text='Imagem').grid(row=0, column=0)
@@ -75,7 +74,7 @@ class ActionsFrame(tk.Frame):
         self.search_receipt = tk.Button(
             self,
             text='Buscar',
-            command=self.wm.show_search_receipt_window
+            command=lambda: self.wm.show_search_receipt_window(master = self.master)
         )
         self.search_receipt.grid(row=1, column=2)
         self.print_receipt = tk.Button(
@@ -122,7 +121,7 @@ class ReceiptsFrame(tk.Frame):
         tree.column("Devedor", width=200)
         tree.bind("<Double-1>", self.on_double_click)
 
-        data = self.wm.controller.get_all_receipts().tuples()
+        data = self.wm.controller.get_all_receipts()
 
         for item in data:
             tree.insert("", tk.END, values=item, iid=item[0])

@@ -1,17 +1,26 @@
 from src.models import Receipt
+from datetime import datetime
 
 def get_receipt(receipt_id):
     return Receipt.get_by_id(receipt_id)
 
 
 def get_all_receipts():
-    return Receipt.select(
+    receipts = Receipt.select(
         Receipt.id,
         Receipt.date,
         Receipt.value,
         Receipt.client_name,
         Receipt.debtor
     ).order_by(Receipt.id.desc()).tuples()
+
+    results = []
+    for item in receipts:
+        item = list(item)
+        item[1] = item[1].strftime('%d/%m/%Y')
+        results.append(item)
+    return results
+
 
 
 def search_receipts(client=None, debtor=None, date=None):
@@ -24,7 +33,8 @@ def search_receipts(client=None, debtor=None, date=None):
     filters = []
 
     if date:
-        filters.append(Receipt.date == date)
+        date_obj = datetime.strptime(date, "%d/%m/%Y").date()
+        filters.append(Receipt.date == date_obj)
     if client:
         filters.append(Receipt.client_name.contains(client))
     if debtor:
@@ -33,5 +43,12 @@ def search_receipts(client=None, debtor=None, date=None):
     if filters:
         query = query.where(*filters)
 
+    results = []
+
+    for item in query.tuples():
+        item = list(item)
+        item[1] = item[1].strftime('%d/%m/%Y')
+        results.append(item)
+
+    return results
     
-    return query
