@@ -30,8 +30,8 @@ class MainWindow(tk.Tk):
         self.actions_frame.grid(
             row=1, column=0, sticky="nsew",
         )
-        self.registers_frame = ReceiptsFrame(self)
-        self.registers_frame.grid(
+        self.receipts_frame = ReceiptsFrame(self)
+        self.receipts_frame.grid(
             row=2, column=0, sticky="nsew", pady=20,
         )
 
@@ -92,7 +92,7 @@ class ReceiptsFrame(tk.Frame):
         
         self.config(background=frame_color)
 
-        self.create_table()
+        self.tree = self.create_table()
 
     def create_table(self):
 
@@ -102,35 +102,63 @@ class ReceiptsFrame(tk.Frame):
         scrollbar = ttk.Scrollbar(self, orient="vertical")
         scrollbar.grid(row=0, column=1, sticky="ns")
 
-        self.tree = ttk.Treeview(
+        tree = ttk.Treeview(
             self,
             columns=("Número", "Data", "Valor", "Cliente", "Devedor"),
             show="headings",
             yscrollcommand=scrollbar.set
         )
-        self.tree.grid(row=0, column=0, sticky="nsew")
-        scrollbar.config(command=self.tree.yview)
+        tree.grid(row=0, column=0, sticky="nsew")
+        scrollbar.config(command=tree.yview)
 
-        self.tree.heading("Número", text="Número")
-        self.tree.heading("Data", text="Data")
-        self.tree.heading("Valor", text="Valor")
-        self.tree.heading("Cliente", text="Cliente")
-        self.tree.heading("Devedor", text="Devedor")
+        tree.heading("Número", text="Número")
+        tree.heading("Data", text="Data")
+        tree.heading("Valor", text="Valor")
+        tree.heading("Cliente", text="Cliente")
+        tree.heading("Devedor", text="Devedor")
 
-        self.tree.column("Número", width=30)
-        self.tree.column("Data", width=80)
-        self.tree.column("Valor", width=80)
-        self.tree.column("Cliente", width=200)
-        self.tree.column("Devedor", width=200)
+        tree.column("Número", width=30)
+        tree.column("Data", width=80)
+        tree.column("Valor", width=80)
+        tree.column("Cliente", width=200)
+        tree.column("Devedor", width=200)
 
-        dados = [
-            (1, "2025-05-27", "R$ 100,00", "L.J Guerra", "Maycon Santos LTDA"),
-            
-        ]
+        data = main_controller.get_all_receipts().tuples()
 
-        for item in dados:
+        for item in data:
+            tree.insert("", tk.END, values=item)
+        return tree
+    
+    def refresh_tree(self):
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+    
+        data = main_controller.get_all_receipts().tuples()
+
+        for item in data:
             self.tree.insert("", tk.END, values=item)
-        
+    
+class ReceiptTreeView(ttk.Treeview):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args,**kwargs)
+
+        self.heading("Número", text="Número")
+        self.heading("Data", text="Data")
+        self.heading("Valor", text="Valor")
+        self.heading("Cliente", text="Cliente")
+        self.heading("Devedor", text="Devedor")
+
+        self.column("Número", width=30)
+        self.column("Data", width=80)
+        self.column("Valor", width=80)
+        self.column("Cliente", width=200)
+        self.column("Devedor", width=200)
+
+        data = main_controller.get_all_receipts().tuples()
+
+        for item in data:
+            self.insert("", tk.END, values=item)
+
 
 if __name__ == '__main__':
     main_window  = MainWindow() 
