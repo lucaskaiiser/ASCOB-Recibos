@@ -1,4 +1,5 @@
 from .main import tk, ttk
+from tkinter import messagebox
 from src.controllers import main_controller
 
 
@@ -51,31 +52,47 @@ class SearchReceiptWindow(tk.Toplevel):
 
         return self.tree
     
+    def clear_treeview(self):
+        for item in self.result_tree.get_children():
+            print('deleting')
+            self.result_tree.delete(item)
+
     def on_double_click(self,event):
-        item = self.tree.focus()
+        item = self.result_tree.focus()
         if item:            
             receipt = self.wm.controller.get_receipt(item)
             print(receipt)
             self.wm.show_edit_receipt_window(receipt.__data__, master=self)
     
     def search(self):
+        if self.tree.get_children():
+            self.clear_treeview()
+            
         data = {
             field_name:entry.get()
             for field_name, entry 
             in self.search_receipt_form.inputs.items()
         }
 
-        receipts = self.wm.controller.search_receipts(
-            client=data.get('Cliente'),
-            debtor=data.get('Devedor'),
-            date=data.get('Data do Pagamento')
-        )
+        try:
+            receipts = self.wm.controller.search_receipts(
+                client=data.get('Cliente'),
+                debtor=data.get('Devedor'),
+                date=data.get('Data do Pagamento')
+            )
+        except Exception as err:
+            messagebox.showerror(str(err))
+            return
+        
+        if not receipts:
+            messagebox.showinfo(
+                message='Nenhuma correspondência encontrada'
+            )
+            return
 
         for item in receipts:
             print(item)
-            self.result_tree.insert("", tk.END, values=item, iid=item[0])
-        
-        
+            self.result_tree.insert("", tk.END, values=item, iid=item[0])      
         
 
 class SearchReceiptForm(tk.Frame):
