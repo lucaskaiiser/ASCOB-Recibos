@@ -1,4 +1,5 @@
 from .main import tk, ttk
+from tkinter import messagebox
 from datetime import datetime
 
 class EditReceiptWindow(tk.Toplevel):
@@ -26,9 +27,22 @@ class EditReceiptWindow(tk.Toplevel):
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.grid_rowconfigure(2, weight=1)
- 
-        
+    
+    def delete_receipt(self):
+        receipt_id = self.receipt_data['id']
+        confirmation = messagebox.askyesno(
+            title='Excluir recibo',
+            message=('Tem certeza que deseja excluir'+
+                f' o recibo {receipt_id} de'+
+                f' {self.receipt_data['client_name']}?'
+            )
+        )
+        if confirmation:
+            self.wm.controller.delete_receipt(receipt_id)
 
+            self.destroy()
+            self.wm.root.receipts_frame.refresh_tree()
+        
 class EditReceiptForm(tk.Frame):
     def __init__(self, master, receipt_data, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
@@ -69,11 +83,11 @@ class ActionsEditReceipt(tk.Frame):
         self.edit_button = tk.Button(self, text='Editar', command=self.master.destroy)
         self.edit_button.grid(row=0, column=0, sticky='e')
 
-        self.exit_button = tk.Button(self, text='Excluir', command=self.master.destroy)
-        self.exit_button.grid(row=0, column=1, sticky='w')
+        self.exclude_button = tk.Button(self, text='Excluir', command=self.master.delete_receipt)
+        self.exclude_button.grid(row=0, column=1, sticky='w')
 
-        self.exclude_button = tk.Button(self, text='Sair', command=self.master.destroy)
-        self.exclude_button.grid(row=0, column=2, sticky='w')
+        self.exit_button = tk.Button(self, text='Sair', command=self.master.destroy)
+        self.exit_button.grid(row=0, column=2, sticky='w')
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)

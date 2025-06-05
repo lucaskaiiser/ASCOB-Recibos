@@ -51,4 +51,8 @@ def search_receipts(client=None, debtor=None, date=None):
         results.append(item)
 
     return results
+
+def delete_receipt(receipt_id):
+    Receipt.delete_by_id(receipt_id)
+
     

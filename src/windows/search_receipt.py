@@ -25,7 +25,7 @@ class SearchReceiptWindow(tk.Toplevel):
     def create_table(self):
 
         scrollbar = ttk.Scrollbar(self, orient="vertical")
-        scrollbar.grid(row=0, column=1, sticky="ns")
+        scrollbar.grid(row=2, column=1, sticky="ns")
 
         self.tree = ttk.Treeview(
             self,
@@ -53,12 +53,9 @@ class SearchReceiptWindow(tk.Toplevel):
     
     def on_double_click(self,event):
         item = self.tree.focus()
-        print(item)
-        if item:
-            
-            
-            receipt = self.wm.controller.get_receipt(item[0])
-            
+        if item:            
+            receipt = self.wm.controller.get_receipt(item)
+            print(receipt)
             self.wm.show_edit_receipt_window(receipt.__data__, master=self)
     
     def search(self):
@@ -73,7 +70,6 @@ class SearchReceiptWindow(tk.Toplevel):
             debtor=data.get('Devedor'),
             date=data.get('Data do Pagamento')
         )
-        
 
         for item in receipts:
             print(item)

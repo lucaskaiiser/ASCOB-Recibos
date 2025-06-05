@@ -131,7 +131,7 @@ class ReceiptsFrame(tk.Frame):
         for item in self.tree.get_children():
             self.tree.delete(item)
     
-        data = self.wm.controller.get_all_receipts().tuples()
+        data = self.wm.controller.get_all_receipts()
 
         for item in data:
             self.tree.insert("", tk.END, values=item, iid=item[0])
@@ -141,7 +141,7 @@ class ReceiptsFrame(tk.Frame):
         if item:
             print(item)
             receipt = self.wm.controller.get_receipt(item)
-            self.wm.show_edit_receipt_window(receipt.__data__)
+            self.wm.show_edit_receipt_window(receipt.__data__,master = self.master)
     
 class ReceiptTreeView(ttk.Treeview):
     def __init__(self, *args, **kwargs):
