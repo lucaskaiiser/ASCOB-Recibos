@@ -3,8 +3,9 @@ from tkinter import messagebox
 from datetime import datetime
 
 class NewReceiptWindow(tk.Toplevel):
-    def __init__(self,*args, **kwargs):
+    def __init__(self,wm,*args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.wm = wm
         self.title('Novo Recibo')
         
         self.configure(
@@ -15,10 +16,10 @@ class NewReceiptWindow(tk.Toplevel):
 
         self.form_title = tk.Label(self, text="Novo Recibo")
         self.form_title.grid(row=0, column=0)
-        self.create_receipt_form = CreateReceiptForm(self)
+        self.create_receipt_form = CreateReceiptForm(master=self, wm=self.wm)
         self.create_receipt_form.grid(row=1, column=0, sticky='ns')
 
-        self.actions_form = ActionsCreateReceipt(self)
+        self.actions_form = ActionsCreateReceipt(master =self, wm=self.wm)
         self.actions_form.grid(row=3, column=0, )
 
         self.emission_date = tk.Label(self, text=f'Data de emissão: {datetime.now().date()}')
@@ -30,13 +31,10 @@ class NewReceiptWindow(tk.Toplevel):
         self.grid_rowconfigure(2, weight=1)
         self.grid_rowconfigure(3, weight=1)
         
-
-
-
 class CreateReceiptForm(tk.Frame):
-    def __init__(self, *args, **kwargs):
+    def __init__(self,wm, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        self.wm = wm
         self.inputs = {}
 
         fields = [
@@ -87,14 +85,11 @@ class CreateReceiptForm(tk.Frame):
             
         finally:
             self.master.destroy()
-        
-
-
 
 class ActionsCreateReceipt(tk.Frame):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, wm, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        self.wm =wm
         self.save_button = tk.Button(
             self, text='Salvar',
             command=self.master.create_receipt_form.create_receipt

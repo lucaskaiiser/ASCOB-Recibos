@@ -1,15 +1,17 @@
 from .main import tk, ttk
 from src.controllers import main_controller
 
+
 class SearchReceiptWindow(tk.Toplevel):
-    def __init__(self,*args, **kwargs):
+    def __init__(self, wm,*args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.wm = wm
         self.title('Buscar Recibo')
 
-        self.search_receipt_form = SearchReceiptForm(self)
+        self.search_receipt_form = SearchReceiptForm(master=self, wm=self.wm)
         self.search_receipt_form.grid(row=0, column=0)
 
-        self.actions_search_receipt = ActionsSearchReceipt(self)
+        self.actions_search_receipt = ActionsSearchReceipt(master=self, wm=self.wm)
         self.actions_search_receipt.grid(row=1, column=0)
 
         self.result_tree = self.create_table()
@@ -53,11 +55,11 @@ class SearchReceiptWindow(tk.Toplevel):
         item = self.tree.focus()
         print(item)
         if item:
-            from src.controllers.main_controller import show_edit_receipt_window
             
-            receipt = main_controller.get_receipt(item[0])
             
-            show_edit_receipt_window(receipt.__data__, master=self)
+            receipt = self.wm.controller.get_receipt(item[0])
+            
+            self.wm.show_edit_receipt_window(receipt.__data__, master=self)
     
     def search(self):
         data = {
@@ -66,24 +68,24 @@ class SearchReceiptWindow(tk.Toplevel):
             in self.search_receipt_form.inputs.items()
         }
 
-        receipts = main_controller.search_receipts(
+        receipts = self.wm.controller.search_receipts(
             client=data.get('Cliente'),
             debtor=data.get('Devedor'),
             date=data.get('Data do Pagamento')
         ).tuples()
-
         
 
         for item in receipts:
+            print(item)
             self.result_tree.insert("", tk.END, values=item, iid=item[0])
         
         
         
 
 class SearchReceiptForm(tk.Frame):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, wm, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        self.wm = wm
         self.inputs = {}
 
         fields = [
@@ -102,9 +104,9 @@ class SearchReceiptForm(tk.Frame):
 
 
 class ActionsSearchReceipt(tk.Frame):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, wm, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        self.wm = wm
         self.buttons = {}
 
         buttons = [

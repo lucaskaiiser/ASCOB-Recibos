@@ -1,13 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
-from src.controllers import main_controller
+
 
 frame_color = '#575555'
 background_color = '#2a2a2a'
 
 class MainWindow(tk.Tk):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, wm, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.wm = wm
         self.title('SISTEMA DE RECIBOS')
         self.resizable(True, True)
         self.minsize(800, 600)
@@ -22,22 +23,23 @@ class MainWindow(tk.Tk):
         self.grid_rowconfigure(1, weight=1)
         self.grid_rowconfigure(2, weight=10)
 
-        self.enterprise_frame = EnterpriseFrame(self)
+        self.enterprise_frame = EnterpriseFrame(master=self, wm=self.wm)
         self.enterprise_frame.grid(
             row=0, column=0, sticky="nsew", pady=20,
         )
-        self.actions_frame = ActionsFrame(self)
+        self.actions_frame = ActionsFrame(master=self, wm=self.wm)
         self.actions_frame.grid(
             row=1, column=0, sticky="nsew",
         )
-        self.receipts_frame = ReceiptsFrame(self)
+        self.receipts_frame = ReceiptsFrame(master=self, wm=self.wm)
         self.receipts_frame.grid(
             row=2, column=0, sticky="nsew", pady=20,
         )
 
 class EnterpriseFrame(tk.Frame):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, wm, *args, **kwargs):
         super().__init__(*args,**kwargs)
+        self.wm = wm
         self.config(
             background=frame_color,
             padx=20,
@@ -50,8 +52,9 @@ class EnterpriseFrame(tk.Frame):
         self.grid_columnconfigure(1, weight=4) 
 
 class ActionsFrame(tk.Frame):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, wm, *args, **kwargs):
         super().__init__(*args,**kwargs)
+        self.wm = wm
         self.config(
             background=frame_color,
             padx=20,
@@ -61,8 +64,9 @@ class ActionsFrame(tk.Frame):
         self.new_receipt_button = tk.Button(
             self,
             text='Adicionar',
-            command=main_controller.show_new_receipt_window
+            command=self.wm.show_new_receipt_window
         )
+            
         tk.Label(self, text='Imagem').grid(row=0, column=0)
         tk.Label(self, text='Imagem').grid(row=0, column=2)
         tk.Label(self, text='Imagem').grid(row=0, column=3)
@@ -71,7 +75,7 @@ class ActionsFrame(tk.Frame):
         self.search_receipt = tk.Button(
             self,
             text='Buscar',
-            command=main_controller.show_search_receipt_window
+            command=self.wm.show_search_receipt_window
         )
         self.search_receipt.grid(row=1, column=2)
         self.print_receipt = tk.Button(
@@ -81,9 +85,9 @@ class ActionsFrame(tk.Frame):
         self.print_receipt.grid(row=1, column=3)
 
 class ReceiptsFrame(tk.Frame):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, wm,*args, **kwargs):
         super().__init__(*args, **kwargs)               
-        
+        self.wm = wm
         self.config(background=frame_color)
 
         self.tree = self.create_table()
@@ -118,7 +122,7 @@ class ReceiptsFrame(tk.Frame):
         tree.column("Devedor", width=200)
         tree.bind("<Double-1>", self.on_double_click)
 
-        data = main_controller.get_all_receipts().tuples()
+        data = self.wm.controller.get_all_receipts().tuples()
 
         for item in data:
             tree.insert("", tk.END, values=item, iid=item[0])
@@ -128,7 +132,7 @@ class ReceiptsFrame(tk.Frame):
         for item in self.tree.get_children():
             self.tree.delete(item)
     
-        data = main_controller.get_all_receipts().tuples()
+        data = self.wm.controller.get_all_receipts().tuples()
 
         for item in data:
             self.tree.insert("", tk.END, values=item, iid=item[0])
@@ -137,9 +141,8 @@ class ReceiptsFrame(tk.Frame):
         item = self.tree.focus()
         if item:
             print(item)
-            from src.controllers.main_controller import show_edit_receipt_window
-            receipt = main_controller.get_receipt(item)
-            show_edit_receipt_window(receipt.__data__)
+            receipt = self.wm.controller.get_receipt(item)
+            self.wm.show_edit_receipt_window(receipt.__data__)
     
 class ReceiptTreeView(ttk.Treeview):
     def __init__(self, *args, **kwargs):
@@ -157,7 +160,7 @@ class ReceiptTreeView(ttk.Treeview):
         self.column("Cliente", width=200)
         self.column("Devedor", width=200)
 
-        data = main_controller.get_all_receipts().tuples()
+        data = self.wm.controller.get_all_receipts().tuples()
 
         for item in data:
             self.insert("", tk.END, values=item)

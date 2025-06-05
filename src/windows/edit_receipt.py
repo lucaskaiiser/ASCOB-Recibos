@@ -2,8 +2,9 @@ from .main import tk, ttk
 from datetime import datetime
 
 class EditReceiptWindow(tk.Toplevel):
-    def __init__(self, receipt_data, *args, **kwargs):
+    def __init__(self, receipt_data,wm, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.wm = wm
         self.title('Editar Recibo')
         self.receipt_data= receipt_data
         print(receipt_data)
@@ -68,8 +69,11 @@ class ActionsEditReceipt(tk.Frame):
         self.edit_button = tk.Button(self, text='Editar', command=self.master.destroy)
         self.edit_button.grid(row=0, column=0, sticky='e')
 
-        self.exit_button = tk.Button(self, text='Sair', command=self.master.destroy)
+        self.exit_button = tk.Button(self, text='Excluir', command=self.master.destroy)
         self.exit_button.grid(row=0, column=1, sticky='w')
+
+        self.exclude_button = tk.Button(self, text='Sair', command=self.master.destroy)
+        self.exclude_button.grid(row=0, column=2, sticky='w')
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
