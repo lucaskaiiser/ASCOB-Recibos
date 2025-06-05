@@ -47,13 +47,6 @@ class SearchReceiptWindow(tk.Toplevel):
         self.tree.column("Cliente", width=200)
         self.tree.column("Devedor", width=200)
 
-        dados = [
-            (1, "2025-05-27", "R$ 100,00", "L.J Guerra", "Maycon Santos LTDA"),
-        ]
-
-        for item in dados:
-            self.tree.insert("", tk.END, values=item, iid=item[0])
-
         return self.tree
     
     def on_double_click(self,event):
@@ -61,10 +54,30 @@ class SearchReceiptWindow(tk.Toplevel):
         print(item)
         if item:
             from src.controllers.main_controller import show_edit_receipt_window
-            self.destroy()
+            
             receipt = main_controller.get_receipt(item[0])
-            print(receipt.__data__)
-            show_edit_receipt_window()
+            
+            show_edit_receipt_window(receipt.__data__, master=self)
+    
+    def search(self):
+        data = {
+            field_name:entry.get()
+            for field_name, entry 
+            in self.search_receipt_form.inputs.items()
+        }
+
+        receipts = main_controller.search_receipts(
+            client=data.get('Cliente'),
+            debtor=data.get('Devedor'),
+            date=data.get('Data do Pagamento')
+        ).tuples()
+
+        
+
+        for item in receipts:
+            self.result_tree.insert("", tk.END, values=item, iid=item[0])
+        
+        
         
 
 class SearchReceiptForm(tk.Frame):
@@ -103,3 +116,5 @@ class ActionsSearchReceipt(tk.Frame):
             button.grid(row=0, column=i, sticky='nsew')
             self.buttons[button_name] = button
 
+        self.search_button: tk.Button = self.buttons['Buscar']
+        self.search_button.configure(command=self.master.search)

@@ -64,16 +64,10 @@ class ActionsFrame(tk.Frame):
             command=main_controller.show_new_receipt_window
         )
         tk.Label(self, text='Imagem').grid(row=0, column=0)
-        tk.Label(self, text='Imagem').grid(row=0, column=1)
         tk.Label(self, text='Imagem').grid(row=0, column=2)
         tk.Label(self, text='Imagem').grid(row=0, column=3)
         self.new_receipt_button.grid(row=1, column=0)
-        self.edit_receipt = tk.Button(
-            self,
-            text='Editar',
-            command=main_controller.show_edit_receipt_window
-        )
-        self.edit_receipt.grid(row=1, column=1)
+        
         self.search_receipt = tk.Button(
             self,
             text='Buscar',
@@ -122,11 +116,12 @@ class ReceiptsFrame(tk.Frame):
         tree.column("Valor", width=80)
         tree.column("Cliente", width=200)
         tree.column("Devedor", width=200)
+        tree.bind("<Double-1>", self.on_double_click)
 
         data = main_controller.get_all_receipts().tuples()
 
         for item in data:
-            tree.insert("", tk.END, values=item)
+            tree.insert("", tk.END, values=item, iid=item[0])
         return tree
     
     def refresh_tree(self):
@@ -136,7 +131,15 @@ class ReceiptsFrame(tk.Frame):
         data = main_controller.get_all_receipts().tuples()
 
         for item in data:
-            self.tree.insert("", tk.END, values=item)
+            self.tree.insert("", tk.END, values=item, iid=item[0])
+
+    def on_double_click(self,event):
+        item = self.tree.focus()
+        if item:
+            print(item)
+            from src.controllers.main_controller import show_edit_receipt_window
+            receipt = main_controller.get_receipt(item)
+            show_edit_receipt_window(receipt.__data__)
     
 class ReceiptTreeView(ttk.Treeview):
     def __init__(self, *args, **kwargs):
@@ -161,6 +164,6 @@ class ReceiptTreeView(ttk.Treeview):
 
 
 if __name__ == '__main__':
-    main_window  = MainWindow() 
+    main_window  = MainWindow()
     main_window.mainloop()
 

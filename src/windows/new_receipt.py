@@ -19,10 +19,10 @@ class NewReceiptWindow(tk.Toplevel):
         self.create_receipt_form.grid(row=1, column=0, sticky='ns')
 
         self.actions_form = ActionsCreateReceipt(self)
-        self.actions_form.grid(row=2, column=0, )
+        self.actions_form.grid(row=3, column=0, )
 
         self.emission_date = tk.Label(self, text=f'Data de emissão: {datetime.now().date()}')
-        self.emission_date.grid(row=3, column=0)
+        self.emission_date.grid(row=2, column=0)
         
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
