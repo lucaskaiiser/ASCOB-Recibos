@@ -76,10 +76,10 @@ class CreateReceiptForm(tk.Frame):
         from src.models.receipt import Receipt
         values_dict = self.get_form_values()
         try:
-            for i in range(7000):
-                Receipt.create(
-                    date=datetime.now(),
-                    **values_dict
+            
+            Receipt.create(
+                date=datetime.now(),
+                **values_dict
                 )
             self.master.master.receipts_frame.refresh_tree()
         except Exception as err:
