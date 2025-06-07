@@ -9,6 +9,9 @@ background_color = '#ffffff'
 class MainWindow(ThemedTk):
     def __init__(self, wm, *args, **kwargs):
         super().__init__(theme='arc',*args, **kwargs)
+        style = ttk.Style()
+        style.configure("Treeview", font=("Arial", 10))  
+        style.configure("Treeview.Heading", font=("Arial", 12, "bold"))  # Cabeçalh
         self.wm = wm
         self.title('SISTEMA DE RECIBOS')
         self.resizable(True, True)
@@ -185,9 +188,4 @@ class ReceiptTreeView(ttk.Treeview):
 
         for item in data:
             self.insert("", ttk.END, values=item)
-
-
-if __name__ == '__main__':
-    main_window  = MainWindow()
-    main_window.mainloop()
 

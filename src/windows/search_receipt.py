@@ -74,7 +74,7 @@ class SearchReceiptWindow(tk.Toplevel):
             self.wm.root.receipts_frame.tree.focus(item)
             self.wm.root.receipts_frame.tree.see(item)
     
-    def search(self):
+    def search(self, event=None):
         if self.tree.get_children():
             self.clear_treeview()
 
@@ -127,6 +127,8 @@ class SearchReceiptForm(ttk.Frame):
         super().__init__(*args, **kwargs)
         self.wm = wm
         self.inputs = {}
+        
+        
 
         fields = [
             "Cliente",
@@ -140,6 +142,7 @@ class SearchReceiptForm(ttk.Frame):
 
             field = ttk.Entry(self, text=field_name)
             field.grid(row=i, column=1, sticky='nsew', pady=5)
+            field.bind("<Return>", self.master.search)
             self.inputs[field_name] = field
 
 class ActionsSearchReceipt(ttk.Frame):

@@ -58,7 +58,11 @@ class EditReceiptWindow(tk.Toplevel):
             if confirmation:
                 self.wm.controller.edit_receipt(self.receipt_data['id'], new_data)
                 self.destroy()
-        self.destroy()
+            return
+        messagebox.showinfo(
+            message='Sem alterações para aplicar'
+        )
+        
         
 class EditReceiptForm(ttk.Frame):
     def __init__(self, master, receipt_data, *args, **kwargs):

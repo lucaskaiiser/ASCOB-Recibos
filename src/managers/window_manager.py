@@ -26,6 +26,7 @@ class WindowManager:
             (master or window.master).wait_window(window)
 
         window.after(100, grab_and_wait)
+        window.resizable(False, False)
 
     def show_new_receipt_window(self, master=None):
         window = NewReceiptWindow(wm=self, master=master)
