@@ -1,16 +1,18 @@
 import tkinter as tk
 from tkinter import ttk
+from ttkthemes import ThemedTk
 
 frame_color = '#575555'
-background_color = '#2a2a2a'
+background_color = '#ffffff'
 
-class MainWindow(tk.Tk):
+class MainWindow(ThemedTk):
     def __init__(self, wm, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(theme='arc',*args, **kwargs)
         self.wm = wm
         self.title('SISTEMA DE RECIBOS')
         self.resizable(True, True)
         self.minsize(800, 600)
+        
         self.config(
             background= background_color,
             padx=20,
@@ -35,59 +37,51 @@ class MainWindow(tk.Tk):
             row=2, column=0, sticky="nsew", pady=20,
         )
 
-class EnterpriseFrame(tk.Frame):
+class EnterpriseFrame(ttk.Frame):
     def __init__(self, wm, *args, **kwargs):
         super().__init__(*args,**kwargs)
         self.wm = wm
-        self.config(
-            background=frame_color,
-            padx=20,
-            pady=20,
-        )        
-        tk.Label(self, text='Enterprise LOGO').grid(row=0, column=0)
-        tk.Label(self, text='Enterprise INFO').grid(row=0, column=1)
+        
+        ttk.Label(self, text='Enterprise LOGO').grid(row=0, column=0)
+        ttk.Label(self, text='Enterprise INFO').grid(row=0, column=1)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=4) 
 
-class ActionsFrame(tk.Frame):
+class ActionsFrame(ttk.Frame):
     def __init__(self, wm, *args, **kwargs):
         super().__init__(*args,**kwargs)
-        self.wm = wm
-        self.config(
-            background=frame_color,
-            padx=20,
-            pady=20
-        )        
+        self.wm = wm          
         
-        self.new_receipt_button = tk.Button(
+        self.new_receipt_button = ttk.Button(
             self,
-            text='Adicionar',
+            text='Novo Recibo',
             command=lambda: self.wm.show_new_receipt_window(master = self.master)
         )
             
-        tk.Label(self, text='Imagem').grid(row=0, column=0)
-        tk.Label(self, text='Imagem').grid(row=0, column=2)
-        tk.Label(self, text='Imagem').grid(row=0, column=3)
+        ttk.Label(self, text='Imagem').grid(row=0, column=0)
+        ttk.Label(self, text='Imagem').grid(row=0, column=2)
+        ttk.Label(self, text='Imagem').grid(row=0, column=3)
         self.new_receipt_button.grid(row=1, column=0)
         
-        self.search_receipt = tk.Button(
+        self.search_receipt = ttk.Button(
             self,
             text='Buscar',
-            command=lambda: self.wm.show_search_receipt_window(master = self.master)
+            command=lambda: self.wm.show_search_receipt_window(master = self.master),
+            style='custom.TButton'
         )
         self.search_receipt.grid(row=1, column=2)
-        self.print_receipt = tk.Button(
+        self.print_receipt = ttk.Button(
             self,
             text='Imprimir'
         )
         self.print_receipt.grid(row=1, column=3)
 
-class ReceiptsFrame(tk.Frame):
+class ReceiptsFrame(ttk.Frame):
     def __init__(self, wm,*args, **kwargs):
         super().__init__(*args, **kwargs)               
         self.wm = wm
-        self.config(background=frame_color)
+        
 
         self.tree = self.create_table()
 
@@ -120,6 +114,7 @@ class ReceiptsFrame(tk.Frame):
         tree.column("Cliente", width=200)
         tree.column("Devedor", width=200)
         tree.bind("<Double-1>", self.on_double_click)
+        tree.bind("<Return>", self.on_double_click)
 
         data = self.wm.controller.get_all_receipts()
 
@@ -162,7 +157,7 @@ class ReceiptTreeView(ttk.Treeview):
         data = self.wm.controller.get_all_receipts().tuples()
 
         for item in data:
-            self.insert("", tk.END, values=item)
+            self.insert("", ttk.END, values=item)
 
 
 if __name__ == '__main__':

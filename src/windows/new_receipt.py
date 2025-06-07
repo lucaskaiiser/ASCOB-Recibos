@@ -9,12 +9,11 @@ class NewReceiptWindow(tk.Toplevel):
         self.title('Novo Recibo')
         
         self.configure(
-            background = '#222222',
             padx=20,
             pady=20
         )
 
-        self.form_title = tk.Label(self, text="Novo Recibo")
+        self.form_title = ttk.Label(self, text="Novo Recibo")
         self.form_title.grid(row=0, column=0)
         self.create_receipt_form = CreateReceiptForm(master=self, wm=self.wm)
         self.create_receipt_form.grid(row=1, column=0, sticky='ns')
@@ -22,7 +21,7 @@ class NewReceiptWindow(tk.Toplevel):
         self.actions_form = ActionsCreateReceipt(master =self, wm=self.wm)
         self.actions_form.grid(row=3, column=0, )
 
-        self.emission_date = tk.Label(self, text=f'Data de emissão: {datetime.now().date()}')
+        self.emission_date = ttk.Label(self, text=f'Data de emissão: {datetime.now().date()}')
         self.emission_date.grid(row=2, column=0)
         
         self.grid_columnconfigure(0, weight=1)
@@ -31,7 +30,7 @@ class NewReceiptWindow(tk.Toplevel):
         self.grid_rowconfigure(2, weight=1)
         self.grid_rowconfigure(3, weight=1)
         
-class CreateReceiptForm(tk.Frame):
+class CreateReceiptForm(ttk.Frame):
     def __init__(self,wm, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.wm = wm
@@ -53,10 +52,10 @@ class CreateReceiptForm(tk.Frame):
         ]
 
         for i, (label_text, field_name) in enumerate(fields):
-            label = tk.Label(self, text=label_text)
+            label = ttk.Label(self, text=label_text)
             label.grid(row=i, column=0, sticky='we')
 
-            entry = tk.Entry(self, width=30)
+            entry = ttk.Entry(self, width=30)
             entry.grid(row=i, column=1, sticky='w')
 
             self.inputs[field_name] = entry
@@ -75,27 +74,31 @@ class CreateReceiptForm(tk.Frame):
         values_dict = self.get_form_values()
         try:
             
-            Receipt.create(
+            receipt = Receipt.create(
                 date=datetime.now(),
                 **values_dict
                 )
             self.master.master.receipts_frame.refresh_tree()
+            self.wm.root.receipts_frame.tree.selection_set(receipt.id)
+            self.wm.root.receipts_frame.tree.focus(receipt.id)
+
         except Exception as err:
-            messagebox.showerror("Erro", err)
+            messagebox.showerror(title="Erro",message= err)
             
         finally:
             self.master.destroy()
+            
 
-class ActionsCreateReceipt(tk.Frame):
+class ActionsCreateReceipt(ttk.Frame):
     def __init__(self, wm, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.wm =wm
-        self.save_button = tk.Button(
+        self.save_button = ttk.Button(
             self, text='Salvar',
             command=self.master.create_receipt_form.create_receipt
         )
         self.save_button.grid(row=0, column=0, sticky='e')
-        self.cancel_button = tk.Button(self, text='Cancelar', command=self.master.destroy)
+        self.cancel_button = ttk.Button(self, text='Cancelar', command=self.master.destroy)
         self.cancel_button.grid(row=0, column=1, sticky='w')
 
         self.grid_rowconfigure(0, weight=1)

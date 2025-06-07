@@ -1,6 +1,5 @@
 from .main import tk, ttk
 from tkinter import messagebox
-from src.controllers import main_controller
 
 
 class SearchReceiptWindow(tk.Toplevel):
@@ -8,6 +7,10 @@ class SearchReceiptWindow(tk.Toplevel):
         super().__init__(*args, **kwargs)
         self.wm = wm
         self.title('Buscar Recibo')
+        self.configure(
+            padx=20,
+            pady=20,
+        )
 
         self.search_receipt_form = SearchReceiptForm(master=self, wm=self.wm)
         self.search_receipt_form.grid(row=0, column=0)
@@ -36,6 +39,7 @@ class SearchReceiptWindow(tk.Toplevel):
         )
         self.tree.grid(row=0, column=0, sticky="nsew")
         self.tree.bind("<Double-1>", self.on_double_click)
+        self.tree.bind("<Return>", self.on_double_click)
         scrollbar.config(command=self.tree.yview)
 
         self.tree.heading("Número", text="Número")
@@ -44,7 +48,7 @@ class SearchReceiptWindow(tk.Toplevel):
         self.tree.heading("Cliente", text="Cliente")
         self.tree.heading("Devedor", text="Devedor")
 
-        self.tree.column("Número", width=30)
+        self.tree.column("Número", width=80)
         self.tree.column("Data", width=80)
         self.tree.column("Valor", width=80)
         self.tree.column("Cliente", width=200)
@@ -67,12 +71,22 @@ class SearchReceiptWindow(tk.Toplevel):
     def search(self):
         if self.tree.get_children():
             self.clear_treeview()
-            
+
         data = {
             field_name:entry.get()
             for field_name, entry 
             in self.search_receipt_form.inputs.items()
         }
+        
+        if (
+            not data['Cliente'] and
+            not data['Devedor'] and
+            not data['Data do Pagamento']
+        ):
+            messagebox.showinfo(
+                message='Preencha pelomenos um campo de pesquisa'
+            )
+            return
 
         try:
             receipts = self.wm.controller.search_receipts(
@@ -80,8 +94,13 @@ class SearchReceiptWindow(tk.Toplevel):
                 debtor=data.get('Devedor'),
                 date=data.get('Data do Pagamento')
             )
+        except ValueError as err:
+            if 'time data' in str(err):
+                messagebox.showerror(title='Erro',message=f'Data inválida')
+                self.search_receipt_form.inputs['Data do Pagamento'].delete(0,tk.END)
+            return
         except Exception as err:
-            messagebox.showerror(str(err))
+            messagebox.showerror(title='Erro',message=str(err))
             return
         
         if not receipts:
@@ -92,10 +111,12 @@ class SearchReceiptWindow(tk.Toplevel):
 
         for item in receipts:
             print(item)
-            self.result_tree.insert("", tk.END, values=item, iid=item[0])      
-        
+            self.result_tree.insert("", tk.END, values=item, iid=item[0])    
 
-class SearchReceiptForm(tk.Frame):
+    def refresh_tree(self):
+        print('refresh tree')  
+
+class SearchReceiptForm(ttk.Frame):
     def __init__(self, wm, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.wm = wm
@@ -108,15 +129,14 @@ class SearchReceiptForm(tk.Frame):
         ]
 
         for i, field_name in enumerate(fields):
-            label = tk.Label(self, text=field_name)
+            label = ttk.Label(self, text=field_name)
             label.grid(row=i, column=0, sticky='nsew')
 
-            field = tk.Entry(self, text=field_name)
+            field = ttk.Entry(self, text=field_name)
             field.grid(row=i, column=1, sticky='nsew')
             self.inputs[field_name] = field
 
-
-class ActionsSearchReceipt(tk.Frame):
+class ActionsSearchReceipt(ttk.Frame):
     def __init__(self, wm, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.wm = wm
@@ -127,9 +147,9 @@ class ActionsSearchReceipt(tk.Frame):
         ]
 
         for i, button_name in enumerate(buttons):
-            button = tk.Button(self, text=button_name)
+            button = ttk.Button(self, text=button_name)
             button.grid(row=0, column=i, sticky='nsew')
             self.buttons[button_name] = button
 
-        self.search_button: tk.Button = self.buttons['Buscar']
+        self.search_button: ttk.Button = self.buttons['Buscar']
         self.search_button.configure(command=self.master.search)
