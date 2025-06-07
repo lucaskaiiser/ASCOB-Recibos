@@ -46,10 +46,14 @@ class EnterpriseFrame(ttk.Frame):
         self.logo = self.logo.resize((60, 60))
         self.logo = ImageTk.PhotoImage(self.logo)
 
-
         self.image = tk.Label(self, image=self.logo)
         self.image.grid(row=0, column=0)
-        ttk.Label(self, text='ASCOB - Sistema de Armazenamento e Emissão de Recibos').grid(row=0, column=1)
+        ttk.Label(
+            self,
+            text='ASCOB - Sistema de Armazenamento e Emissão de Recibos',
+            font=('Red Hat Display', 18, 'bold') 
+            
+        ).grid(row=0, column=1)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=4) 
@@ -79,20 +83,20 @@ class ActionsFrame(ttk.Frame):
             
         ttk.Label(self, image=self.print_image).grid(row=0, column=3)
         
-        self.new_receipt_button.grid(row=1, column=0)
+        self.new_receipt_button.grid(row=1, column=0,padx=10)
         
         self.search_receipt = ttk.Button(
             self,
             text='Buscar',
             command=lambda: self.wm.show_search_receipt_window(master = self.master),
-            style='custom.TButton'
+            style='custom.TButton',
         )
-        self.search_receipt.grid(row=1, column=2)
+        self.search_receipt.grid(row=1, column=2, padx=10)
         self.print_receipt = ttk.Button(
             self,
             text='Imprimir'
         )
-        self.print_receipt.grid(row=1, column=3)
+        self.print_receipt.grid(row=1, column=3, padx=10)
 
         self.configure(
             padding=20

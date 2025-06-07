@@ -8,28 +8,30 @@ class SearchReceiptWindow(tk.Toplevel):
         self.wm = wm
         self.title('Buscar Recibo')
         self.configure(
+            background='#F5F6F7',
             padx=20,
             pady=20,
         )
 
         self.search_receipt_form = SearchReceiptForm(master=self, wm=self.wm)
-        self.search_receipt_form.grid(row=0, column=0)
+        self.search_receipt_form.grid(row=0, column=0, sticky='w',)
 
         self.actions_search_receipt = ActionsSearchReceipt(master=self, wm=self.wm)
-        self.actions_search_receipt.grid(row=1, column=0)
+        self.actions_search_receipt.grid(row=0, column=0, sticky='e')
 
         self.result_tree = self.create_table()
-        self.result_tree.grid(row=2, column=0)
+        self.result_tree.grid(row=1, column=0, sticky='wnes')
 
         self.grid_columnconfigure(0, weight=1)
+        
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
-        self.grid_rowconfigure(2, weight=1)
+        
 
     def create_table(self):
 
         scrollbar = ttk.Scrollbar(self, orient="vertical")
-        scrollbar.grid(row=2, column=1, sticky="ns")
+        scrollbar.grid(row=1, column=1, sticky="ns")
 
         self.tree = ttk.Treeview(
             self,
@@ -130,10 +132,10 @@ class SearchReceiptForm(ttk.Frame):
 
         for i, field_name in enumerate(fields):
             label = ttk.Label(self, text=field_name)
-            label.grid(row=i, column=0, sticky='nsew')
+            label.grid(row=i, column=0, sticky='nsew', padx=10)
 
             field = ttk.Entry(self, text=field_name)
-            field.grid(row=i, column=1, sticky='nsew')
+            field.grid(row=i, column=1, sticky='nsew', pady=5)
             self.inputs[field_name] = field
 
 class ActionsSearchReceipt(ttk.Frame):

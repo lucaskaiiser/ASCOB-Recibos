@@ -10,18 +10,18 @@ class EditReceiptWindow(tk.Toplevel):
         self.receipt_data= receipt_data
         print(receipt_data)
         self.configure(
-            background='#ffffff',
+            background='#f5f6f7',
             padx=20,
             pady=20
         )
 
-        self.form_title = ttk.Label(self, text="Editar Recibo")
-        self.form_title.grid(row=0, column=0)
+        self.form_title = ttk.Label(self, text="Editar Recibo",  font=('Red Hat Display', 16))
+        self.form_title.grid(row=0, column=0,sticky='w',pady=20)
         self.edit_receipt_form = EditReceiptForm(self, receipt_data)
-        self.edit_receipt_form.grid(row=1, column=0, sticky='ns')
+        self.edit_receipt_form.grid(row=1, column=0, sticky='ns', padx=10)
 
         self.actions_form = ActionsEditReceipt(self)
-        self.actions_form.grid(row=2, column=0, )
+        self.actions_form.grid(row=2, column=0,pady=20, sticky='nwse' )
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -85,13 +85,13 @@ class ActionsEditReceipt(ttk.Frame):
         super().__init__(*args, **kwargs)
 
         self.edit_button = ttk.Button(self, text='Editar', command=self.master.destroy)
-        self.edit_button.grid(row=0, column=0, sticky='e')
+        self.edit_button.grid(row=0, column=0, sticky='w', padx=10)
 
         self.exclude_button = ttk.Button(self, text='Excluir', command=self.master.delete_receipt)
-        self.exclude_button.grid(row=0, column=1, sticky='w')
+        self.exclude_button.grid(row=0, column=0, sticky='e', padx=10)
 
         self.exit_button = ttk.Button(self, text='Sair', command=self.master.destroy)
-        self.exit_button.grid(row=0, column=2, sticky='w')
+        self.exit_button.grid(row=0, column=2)
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
