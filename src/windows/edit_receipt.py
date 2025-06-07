@@ -46,6 +46,19 @@ class EditReceiptWindow(tk.Toplevel):
                 self.master.search()
             except Exception as err:
                 print(err)
+
+    def edit_receipt(self):
+        old_data = self.edit_receipt_form.old_data
+        new_data = self.edit_receipt_form.get_form_values()
+        if old_data != new_data:
+            confirmation = messagebox.askyesno(
+                title='Confirmar Alteração nos dados do recibo',
+                message=f'Deseja aplicar as alterações no recibo {self.receipt_data['id']}?'
+            )
+            if confirmation:
+                self.wm.controller.edit_receipt(self.receipt_data['id'], new_data)
+                self.destroy()
+        self.destroy()
         
 class EditReceiptForm(ttk.Frame):
     def __init__(self, master, receipt_data, *args, **kwargs):
@@ -57,35 +70,59 @@ class EditReceiptForm(ttk.Frame):
             ("Cliente", "client_name"),
             ("Endereço", "address"),
             ("Valor", "value"),
-            ("Por Extenso", "por_extenso"),
+            #("Por Extenso", "por_extenso"),
             ("Devedor", "debtor"),
-            ("Número do Boleto", "bill_number"),
-            ("Vencimento do Boleto", "bill_due_date"),
-            ("Parcela", "installment_number"),
-            ("Vencimento da Parcela", "installment_due_date"),
+            #("Número do Boleto", "bill_number"),
+            #("Vencimento do Boleto", "bill_due_date"),
+            #("Parcela", "installment_number"),
+            #("Vencimento da Parcela", "installment_due_date"),
             ("Data do Pagamento", "payment_date"),
-            ("Observações", "description"),
+            #("Observações", "description"),
             ("Cobrador", "cobrador"),
         ]
 
         for i, (label_text, field_name) in enumerate(fields):
             label = ttk.Label(self, text=label_text)
-            label.grid(row=i, column=0, sticky='we')
+            label.grid(row=i, column=0, sticky='we', padx=10)
 
-            entry = ttk.Entry(self, width=30)
-            entry.grid(row=i, column=1, sticky='w')
+            entry = ttk.Entry(self, width=40)
+            entry.grid(row=i, column=1, sticky='w', pady=5)
             print(receipt_data[field_name])
             self.inputs[field_name] = entry.insert(0,receipt_data[field_name] or '')
 
+            self.inputs.update(
+                {field_name: entry }
+            )
+        
+        label = ttk.Label(self, text='Descrição')
+        label.grid(row=len(fields), column=0, sticky='nw', padx=10)
+        entry = tk.Text(self, width=27, height=10, font=("Arial", 8))
+        entry.grid(row=len(fields), column=1, sticky='wnes', pady=5)
+        entry.insert("1.0", receipt_data['description'] or '')
+        self.inputs.update(
+                {'description': entry}
+            )
+
+        self.old_data = self.get_form_values()
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
+
+    def get_form_values(self):
+        values_dict = {
+            field_name:entry.get() for field_name,entry in self.inputs.items() if field_name != 'description'
+        }
+        values_dict.update({
+            'description': self.inputs['description'].get("1.0", "end-1c")
+        })
+        return values_dict
 
 class ActionsEditReceipt(ttk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.edit_button = ttk.Button(self, text='Editar', command=self.master.destroy)
+        self.edit_button = ttk.Button(self, text='Editar', command=self.master.edit_receipt)
         self.edit_button.grid(row=0, column=0, sticky='w', padx=10)
+        #self.edit_button['state'] = 'disabled'
 
         self.exclude_button = ttk.Button(self, text='Excluir', command=self.master.delete_receipt)
         self.exclude_button.grid(row=0, column=0, sticky='e', padx=10)

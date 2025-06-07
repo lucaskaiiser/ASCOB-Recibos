@@ -66,9 +66,13 @@ class SearchReceiptWindow(tk.Toplevel):
     def on_double_click(self,event):
         item = self.result_tree.focus()
         if item:            
-            receipt = self.wm.controller.get_receipt(item)
-            print(receipt)
-            self.wm.show_edit_receipt_window(receipt.__data__, master=self)
+            #receipt = self.wm.controller.get_receipt(item)
+            #print(receipt)
+            #self.wm.show_edit_receipt_window(receipt.__data__, master=self)
+            self.destroy()
+            self.wm.root.receipts_frame.tree.selection_set(item)
+            self.wm.root.receipts_frame.tree.focus(item)
+            self.wm.root.receipts_frame.tree.see(item)
     
     def search(self):
         if self.tree.get_children():

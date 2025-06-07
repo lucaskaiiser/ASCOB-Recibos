@@ -22,7 +22,7 @@ class NewReceiptWindow(tk.Toplevel):
         )
         self.form_title.grid(row=0, column=0, sticky='w')
         self.create_receipt_form = CreateReceiptForm(master=self, wm=self.wm)
-        self.create_receipt_form.grid(row=1, column=0, sticky='ns', pady=20)
+        self.create_receipt_form.grid(row=1, column=0, sticky='ns', pady=10)
 
         self.actions_form = ActionsCreateReceipt(master =self, wm=self.wm)
         self.actions_form.grid(row=3, column=0 )
@@ -30,7 +30,7 @@ class NewReceiptWindow(tk.Toplevel):
         self.emission_date = ttk.Label(
             self,
             text=f'Data de emissão: {datetime.now().date().strftime('%d/%m/%Y')}')
-        self.emission_date.grid(row=2, column=0, sticky='w', pady=20)
+        self.emission_date.grid(row=2, column=0, sticky='w', pady=10)
         
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -46,30 +46,34 @@ class CreateReceiptForm(ttk.Frame):
 
         fields = [
             ("Cliente", "client_name"),
-            ("Endereço", "address"),
             ("Valor", "value"),
-            ("Por Extenso", "por_extenso"),
+            #("Por Extenso", "por_extenso"),
             ("Devedor", "debtor"),
-            ("Número do Boleto", "bill_number"),
-            ("Vencimento do Boleto", "bill_due_date"),
-            ("Parcela", "installment_number"),
-            ("Vencimento da Parcela", "installment_due_date"),
+            ("Endereço", "address"),
+            #("Número do Boleto", "bill_number"),
+            #("Vencimento do Boleto", "bill_due_date"),
+            #("Parcela", "installment_number"),
+            #("Vencimento da Parcela", "installment_due_date"),
             ("Data do Pagamento", "payment_date"),
             ("Cobrador", "cobrador"),
-            ("Observações", "description"),
+            #("Observações", "description"),
         ]
 
         for i, (label_text, field_name) in enumerate(fields):
             label = ttk.Label(self, text=label_text)
-            if field_name == 'description':
-                label.grid(row=i, column=0, sticky='wen', padx=10)
-                entry = tk.Text(self, width=30, height=10)
-            else:
-                label.grid(row=i, column=0, sticky='we', padx=10)
-                entry = ttk.Entry(self, width=30)
+            label.grid(row=i, column=0, sticky='we', padx=10)
+            entry = ttk.Entry(self, width=40)
             entry.grid(row=i, column=1, sticky='w', pady=5)
 
             self.inputs[field_name] = entry
+
+        label = ttk.Label(self, text='Descrição')
+        label.grid(row=len(fields), column=0, sticky='nw', padx=10)
+        entry = tk.Text(self, width=27, height=10, font=("Arial", 8))
+        entry.grid(row=len(fields), column=1, sticky='wnes')
+
+        self.inputs['description'] = entry
+        
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
@@ -77,8 +81,11 @@ class CreateReceiptForm(ttk.Frame):
         
     def get_form_values(self):
         values_dict = {
-            field_name:entry.get() for field_name,entry in self.inputs.items()
+            field_name:entry.get() for field_name,entry in self.inputs.items() if field_name != 'description'
         }
+        values_dict.update({
+            'description': self.inputs['description'].get("1.0", "end-1c")
+        })
         return(values_dict)
 
     def create_receipt(self):

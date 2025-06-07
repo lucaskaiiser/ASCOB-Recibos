@@ -55,4 +55,13 @@ def search_receipts(client=None, debtor=None, date=None):
 def delete_receipt(receipt_id):
     Receipt.delete_by_id(receipt_id)
 
+def edit_receipt(receipt_id, new_data):
+    print(new_data)
+
+    query = Receipt.update(
+        **new_data
+    ).where(Receipt.id == receipt_id)
+
+    print(query)
+    query.execute()
     
