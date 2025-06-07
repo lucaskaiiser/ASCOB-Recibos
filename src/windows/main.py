@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from ttkthemes import ThemedTk
+from PIL import Image, ImageTk
 
 frame_color = '#575555'
 background_color = '#ffffff'
@@ -41,9 +42,14 @@ class EnterpriseFrame(ttk.Frame):
     def __init__(self, wm, *args, **kwargs):
         super().__init__(*args,**kwargs)
         self.wm = wm
-        
-        ttk.Label(self, text='Enterprise LOGO').grid(row=0, column=0)
-        ttk.Label(self, text='Enterprise INFO').grid(row=0, column=1)
+        self.logo = Image.open('src/static/pngegg.png')
+        self.logo = self.logo.resize((60, 60))
+        self.logo = ImageTk.PhotoImage(self.logo)
+
+
+        self.image = tk.Label(self, image=self.logo)
+        self.image.grid(row=0, column=0)
+        ttk.Label(self, text='ASCOB - Sistema de Armazenamento e Emissão de Recibos').grid(row=0, column=1)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=4) 
@@ -58,10 +64,21 @@ class ActionsFrame(ttk.Frame):
             text='Novo Recibo',
             command=lambda: self.wm.show_new_receipt_window(master = self.master)
         )
+        self.new_image = Image.open('src/static/new.png')
+        self.new_image = ImageTk.PhotoImage(self.new_image)
             
-        ttk.Label(self, text='Imagem').grid(row=0, column=0)
-        ttk.Label(self, text='Imagem').grid(row=0, column=2)
-        ttk.Label(self, text='Imagem').grid(row=0, column=3)
+        ttk.Label(self, image=self.new_image).grid(row=0, column=0)
+
+        self.search_image = Image.open('src/static/search.png')
+        self.search_image = ImageTk.PhotoImage(self.search_image)
+            
+        ttk.Label(self, image=self.search_image).grid(row=0, column=2)
+
+        self.print_image = Image.open('src/static/print.png')
+        self.print_image = ImageTk.PhotoImage(self.print_image)
+            
+        ttk.Label(self, image=self.print_image).grid(row=0, column=3)
+        
         self.new_receipt_button.grid(row=1, column=0)
         
         self.search_receipt = ttk.Button(
@@ -76,6 +93,12 @@ class ActionsFrame(ttk.Frame):
             text='Imprimir'
         )
         self.print_receipt.grid(row=1, column=3)
+
+        self.configure(
+            padding=20
+        )
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
 
 class ReceiptsFrame(ttk.Frame):
     def __init__(self, wm,*args, **kwargs):

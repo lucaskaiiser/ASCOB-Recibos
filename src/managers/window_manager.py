@@ -22,6 +22,7 @@ class WindowManager:
 
         def grab_and_wait():
             window.grab_set()
+            window.focus_set()
             (master or window.master).wait_window(window)
 
         window.after(100, grab_and_wait)
