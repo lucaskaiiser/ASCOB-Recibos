@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <style>
+        html{
+            font-size: 18px
+        }
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+        body {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            
+        }
+        .receipt-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed black;
+            height: 50%;
+            justify-content: space-between;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100px;
+        }
+
+        .logo-container img {
+            max-width: 100px;
+            max-height: 100px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid black;
+            height: 100px;
+        }
+
+        .enterprise-info-container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            font-size: 14px;
+            gap: 3px;
+            
+        }
+
+        .enterprise-last-line {
+            display: flex;
+            justify-content: space-between;
+            width: 400px;
+            
+        }
+
+        .payment-id-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-left: 1px solid black;
+            height: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            width: 160px;
+        }
+
+        .payment-value {
+            margin: 5px;
+            font-size: 20px;
+        }
+        .info {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            
+        }
+        .info-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            
+        }
+
+        .info-label {
+            display: flex;
+            width: 25%;
+            margin:5px 0px;
+        }
+        
+        .info-data {
+            width: 100%;
+            background-color: #f2f2f2;
+        }
+        
+        .long-text {
+            min-height:150px ;
+            
+        }
+
+        .long-text-label {
+            min-height: 150px;
+            display: flex;
+            justify-content: flex-start;
+            
+        }
+
+        .signature {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cobrador-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .payment-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid black;
+            width: 170px;
+            padding: 5px;
+            gap: 10px;
+        }
+
+        .payment-date h2 {
+            margin: 0;
+            padding: 0px;
+        }
+
+        .signature-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .signature-sign {
+            border-top: 1px solid black;
+            padding-top: 5px;
+        }
+
+        .receipt-control-container {
+            height: 50%;
+            font-size: 25px;
+            
+        }
+    </style>
+    <div class="receipt-container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="{{logo_dir}}" alt="" height="10">
+                
+            </div>
+            <div class="enterprise-info-container">
+                <div style="font-size: 18px; margin: 0; padding: 0;"><strong>ASCOB - Serviços de Cobrança e Assessoria Jurídica S/C</strong></div>
+                <div>CNPJ: 02.944.287/0001-33</div>
+                <div>Travessa S-1 n64 - Japiim 1 - CEP:69.078-510</div>
+                <div><strong>Fone/Fax..:: (92) 3629-6848 / 3232-6499 Cel: 91428493</strong></div>
+                <div class="enterprise-last-line">
+                    <div>Manaus</div>
+                    <div>Email: ascobmanaus@hotmail.com</div>
+                    <div>Amazonas</div>
+                </div>
+            </div>
+            <div class="payment-id-container">
+                <div>Recibo: {{receipt_id}}</div>
+                <div>Valor:</div>
+                <div class="payment-value">
+                    <strong>R$ {{value}}</strong>
+                </div>
+            </div>
+
+        </div>
+        <div class="info">
+            <div class="info-container">
+                <div class="info-label">
+                    Recebemos do Sr.
+                </div>
+                <div class="info-data">
+                    {{debtor}}
+                </div>
+            </div>
+            <div class="info-container">
+                <div class="info-label">
+                    Endereço
+                </div>
+                <div class="info-data">
+                    {{address}}
+                </div>
+            </div>
+            <div class="info-container">
+                <div class="info-label">
+                    A importância de
+                </div>
+                <div class="info-data">
+                    {{extenso}}
+                </div>
+            </div>
+            <div class="info-container">
+                <div class="info-label long-text-label">
+                    Referente a
+                </div>
+                <div class="info-data long-text">
+                    {{description}}
+                </div>
+            </div>
+        </div>
+        <div class="signature">
+            <div class="cobrador-container">
+                <div class="cobrador-label">
+                    Cobrador: {{cobrador}}
+                </div>
+                <div class="payment-date">
+                    <div class="title"><h2>PAGO</h2></div>
+                    <div class="date-input">Em ........./........./.........</div>
+                    <div class="enterprise-name"><strong>ASCOB</strong></div>
+                </div>
+            </div>
+            <div class="signature-container">
+                <div class="date">
+                    {{today}}
+                </div>
+                <div class="signature-sign">
+                    <strong>ASCOB - Serviços de Cobrança e Assessoria Jurídica S/C</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .receipt-control-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 20px;
+            justify-content: space-between;
+            height: 500px;
+        }
+
+        .control-title-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            width: 100%;
+        }
+
+        .receipt-control-body {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            justify-content: space-between;
+            
+        }
+
+        .control-data-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px
+        }
+
+        .control-data {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .receipt-control-end {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            bottom: 0;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .centered {
+            display: flex;
+            width: 500px;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        .left {
+            width: 100%;
+            left: 0;
+        }
+    </style>
+    <div class="receipt-control-container">
+        <div class="control-title-container">
+            Controle de Recibo Emitido
+        </div>
+        <div class="receipt-control-body">
+            <div class="control-data-container">
+                <div class="control-data">
+                    <div>Recibo Número...: {{receipt_id}}</div>
+                    <div>Valor Recebido...: R$ {{value}}</div>
+                </div>
+                <div class="control-data">Emitido...: {{today}}</div>
+                <div class="control-data">Recebemos de(o)...: {{debtor}}</div>
+                <div class="control-data long-text">Referente ...: {{description}}</div>
+            </div>
+            <div class="receipt-control-end">
+                <div class="control-data left">
+                    Cobrador: {{cobrador}}
+                </div>
+                <div class="signature-sign centered">
+                    Visto do Cobrador
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
