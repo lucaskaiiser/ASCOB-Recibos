@@ -195,7 +195,7 @@ class ReceiptTreeView(ttk.Treeview):
         self.heading("Cliente", text="Cliente")
         self.heading("Devedor", text="Devedor")
 
-        self.column("Número", width=30)
+        self.column("Número", width=40)
         self.column("Data", width=80)
         self.column("Valor", width=80)
         self.column("Cliente", width=200)
