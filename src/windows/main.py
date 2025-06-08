@@ -13,6 +13,8 @@ class MainWindow(ThemedTk):
         style.configure("Treeview", font=("Arial", 10))  
         style.configure("Treeview.Heading", font=("Arial", 12, "bold"))
         style.configure("TButton", focuscolor="ffffff")
+        icon = ImageTk.PhotoImage(file="src/static/pngegg.png")
+        self.iconphoto(False, icon)
         #style.configure('TFrame', background="#ffffff")
         #style.configure('TLabel', background="#ffffff")
         #style.configure('TopLevel', background="#ffffff")
