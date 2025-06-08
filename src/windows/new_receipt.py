@@ -92,6 +92,28 @@ class CreateReceiptForm(ttk.Frame):
         from src.models.receipt import Receipt
         values_dict = self.get_form_values()
         try:
+            for item, value in values_dict.items():
+                if value == '':
+                    raise ValueError(f'Há campos não preenchidos')
+                    
+                values_dict[item] = value.strip()
+        
+        except ValueError as err:
+            messagebox.showerror(message=err)
+            return
+
+        print('aaaaa', values_dict)
+
+        try:
+            values_dict['value'] = round(float(values_dict['value']),2)
+
+        except ValueError as err:
+            messagebox.showerror(message='Valor deve ser no formato real.centavo')
+            return
+        except Exception as err:
+            messagebox.showerror(message=str(err))
+            return
+        try:
             
             receipt = Receipt.create(
                 date=datetime.now(),

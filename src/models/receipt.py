@@ -14,7 +14,7 @@ class Receipt(Model):
     #bill_due_date = DateField()
     #installment_number = IntegerField()
     #installment_due_date = DateField()
-    payment_date = DateField()
+    #payment_date = DateField()
     description = CharField(null=True) 
     cobrador = CharField()
 

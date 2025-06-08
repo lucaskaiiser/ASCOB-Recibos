@@ -57,7 +57,11 @@ def delete_receipt(receipt_id):
     Receipt.delete_by_id(receipt_id)
 
 def edit_receipt(receipt_id, new_data):
-    print(new_data)
+    for item, value in new_data.items():
+        try:
+            new_data[item] = value.strip()
+        except:
+            pass
 
     query = Receipt.update(
         **new_data

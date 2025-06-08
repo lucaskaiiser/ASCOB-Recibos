@@ -50,6 +50,14 @@ class EditReceiptWindow(tk.Toplevel):
     def edit_receipt(self):
         old_data = self.edit_receipt_form.old_data
         new_data = self.edit_receipt_form.get_form_values()
+        try:
+            new_data['value'] = round(float(new_data['value']),2)
+        except ValueError as err:
+            messagebox.showerror(message='Valor deve ser no formato inteiro.fração')
+            return
+        except Exception as err:
+            messagebox.showerror(message=str(err))
+            return
         if old_data != new_data:
             confirmation = messagebox.askyesno(
                 title='Confirmar Alteração nos dados do recibo',
@@ -57,6 +65,7 @@ class EditReceiptWindow(tk.Toplevel):
             )
             if confirmation:
                 self.wm.controller.edit_receipt(self.receipt_data['id'], new_data)
+                self.wm.root.receipts_frame.refresh_tree()
                 self.destroy()
             return
         messagebox.showinfo(
