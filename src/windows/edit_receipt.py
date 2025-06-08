@@ -51,6 +51,17 @@ class EditReceiptWindow(tk.Toplevel):
         old_data = self.edit_receipt_form.old_data
         new_data = self.edit_receipt_form.get_form_values()
         try:
+            for item, value in new_data.items():
+                if value == '':
+                    raise ValueError(f'Há campos não preenchidos')
+                    
+                new_data[item] = value.strip()
+        
+        except ValueError as err:
+            messagebox.showerror(message=err)
+            return
+
+        try:
             new_data['value'] = round(float(new_data['value']),2)
         except ValueError as err:
             messagebox.showerror(message='Valor deve ser no formato inteiro.fração')
