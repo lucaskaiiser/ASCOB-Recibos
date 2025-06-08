@@ -13,6 +13,11 @@ class SearchReceiptWindow(tk.Toplevel):
             pady=20,
         )
 
+        self.wait_visibility()
+        x = self.wm.root.winfo_x() + self.wm.root.winfo_width() // 2 - self.winfo_width() // 2
+        y = self.wm.root.winfo_y() + self.wm.root.winfo_height() // 2 - self.winfo_height() // 2
+        self.geometry(f'+{x}+{y}')
+
         self.search_receipt_form = SearchReceiptForm(master=self, wm=self.wm)
         self.search_receipt_form.grid(row=0, column=0, sticky='w',)
 
@@ -45,7 +50,7 @@ class SearchReceiptWindow(tk.Toplevel):
         scrollbar.config(command=self.tree.yview)
 
         self.tree.heading("Número", text="Número")
-        self.tree.heading("Data", text="Data")
+        self.tree.heading("Data", text="Emissão")
         self.tree.heading("Valor", text="Valor")
         self.tree.heading("Cliente", text="Cliente")
         self.tree.heading("Devedor", text="Devedor")
@@ -87,7 +92,7 @@ class SearchReceiptWindow(tk.Toplevel):
         if (
             not data['Cliente'] and
             not data['Devedor'] and
-            not data['Data do Pagamento']
+            not data['Data de Emissão']
         ):
             messagebox.showinfo(
                 message='Preencha pelomenos um campo de pesquisa'
@@ -98,12 +103,12 @@ class SearchReceiptWindow(tk.Toplevel):
             receipts = self.wm.controller.search_receipts(
                 client=data.get('Cliente'),
                 debtor=data.get('Devedor'),
-                date=data.get('Data do Pagamento')
+                date=data.get('Data de Emissão')
             )
         except ValueError as err:
             if 'time data' in str(err):
                 messagebox.showerror(title='Erro',message=f'Data inválida')
-                self.search_receipt_form.inputs['Data do Pagamento'].delete(0,tk.END)
+                self.search_receipt_form.inputs['Data de Emissão'].delete(0,tk.END)
             return
         except Exception as err:
             messagebox.showerror(title='Erro',message=str(err))
@@ -127,13 +132,11 @@ class SearchReceiptForm(ttk.Frame):
         super().__init__(*args, **kwargs)
         self.wm = wm
         self.inputs = {}
-        
-        
 
         fields = [
             "Cliente",
             "Devedor",
-            "Data do Pagamento"
+            "Data de Emissão"
         ]
 
         for i, field_name in enumerate(fields):

@@ -1,6 +1,6 @@
 from peewee import Model,CharField, DateField, FloatField, IntegerField
 from src.models import db
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Receipt(Model):
 
@@ -33,19 +33,41 @@ class Receipt(Model):
 if __name__ == '__main__':
     from datetime import datetime
     db.create_tables([Receipt])
-    test = Receipt(
-        date=datetime.now().date(),
-        value=1000,
-        client_name='LJGUERRA',
-        debtor='AAAAA',
-        address='Rua Exemplo, 123',
-        por_extenso='Mil reais',
-        bill_number='123456789',
-        bill_due_date=datetime(2025, 6, 30).date(),
-        installment_number=1,
-        installment_due_date=datetime(2025, 7, 30).date(),
-        payment_date=datetime.now().date(),  # ou uma data se já foi pago
-        description='Pagamento referente ao serviço X',
-        cobrador='João Silva'
-    )
-    test.save()
+    def populate_receipts():
+        example_data = [
+            {
+                "client_name": "João Silva",
+                "address": "Rua das Flores, 123",
+                "date": datetime.now().date() - timedelta(days=10),
+                "value": 250.75,
+                "debtor": "Empresa XYZ",
+                "payment_date": datetime.now().date() - timedelta(days=5),
+                "description": "Pagamento referente ao serviço A.",
+                "cobrador": "Carlos"
+            },
+            {
+                "client_name": "Maria Oliveira",
+                "address": "Av. Brasil, 456",
+                "date": datetime.now().date() - timedelta(days=20),
+                "value": 1000.00,
+                "debtor": "Empresa ABC",
+                "payment_date": datetime.now().date() - timedelta(days=18),
+                "description": "Pagamento parcial da fatura 456.",
+                "cobrador": "Ana"
+            },
+            {
+                "client_name": "Pedro Santos",
+                "address": "Praça Central, 789",
+                "date": datetime.now().date(),
+                "value": 500.50,
+                "debtor": "Fulano Ltda",
+                "payment_date": datetime.now().date(),
+                "description": None,
+                "cobrador": "Lucas"
+            },
+        ]
+
+        for receipt in example_data:
+            Receipt.create(**receipt)
+        print("Dados inseridos com sucesso!")
+    populate_receipts()

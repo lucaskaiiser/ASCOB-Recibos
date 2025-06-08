@@ -4,14 +4,18 @@ from ttkthemes import ThemedTk
 from PIL import Image, ImageTk
 
 frame_color = '#575555'
-background_color = '#ffffff'
+background_color = '#F5F6F7'
 
 class MainWindow(ThemedTk):
     def __init__(self, wm, *args, **kwargs):
         super().__init__(theme='arc',*args, **kwargs)
         style = ttk.Style()
         style.configure("Treeview", font=("Arial", 10))  
-        style.configure("Treeview.Heading", font=("Arial", 12, "bold"))  # Cabeçalh
+        style.configure("Treeview.Heading", font=("Arial", 12, "bold"))
+        style.configure("TButton", focuscolor="ffffff")
+        #style.configure('TFrame', background="#ffffff")
+        #style.configure('TLabel', background="#ffffff")
+        #style.configure('TopLevel', background="#ffffff")
         self.wm = wm
         self.title('SISTEMA DE RECIBOS')
         self.resizable(True, True)
@@ -30,7 +34,7 @@ class MainWindow(ThemedTk):
 
         self.enterprise_frame = EnterpriseFrame(master=self, wm=self.wm)
         self.enterprise_frame.grid(
-            row=0, column=0, sticky="nsew", pady=20,
+            row=0, column=0, sticky="nsew", pady=10,
         )
         self.actions_frame = ActionsFrame(master=self, wm=self.wm)
         self.actions_frame.grid(
@@ -38,18 +42,22 @@ class MainWindow(ThemedTk):
         )
         self.receipts_frame = ReceiptsFrame(master=self, wm=self.wm)
         self.receipts_frame.grid(
-            row=2, column=0, sticky="nsew", pady=20,
+            row=2, column=0, sticky="nsew", pady=10,
         )
 
 class EnterpriseFrame(ttk.Frame):
     def __init__(self, wm, *args, **kwargs):
         super().__init__(*args,**kwargs)
         self.wm = wm
+        
         self.logo = Image.open('src/static/pngegg.png')
-        self.logo = self.logo.resize((60, 60))
+        self.logo = self.logo.resize((40, 40))
         self.logo = ImageTk.PhotoImage(self.logo)
 
         self.image = tk.Label(self, image=self.logo)
+        self.image.configure(
+            background=background_color
+        )
         self.image.grid(row=0, column=0)
         ttk.Label(
             self,
@@ -133,7 +141,7 @@ class ReceiptsFrame(ttk.Frame):
         scrollbar.config(command=tree.yview)
 
         tree.heading("Número", text="Número")
-        tree.heading("Data", text="Data")
+        tree.heading("Data", text="Emissão")
         tree.heading("Valor", text="Valor")
         tree.heading("Cliente", text="Cliente")
         tree.heading("Devedor", text="Devedor")
@@ -173,7 +181,7 @@ class ReceiptTreeView(ttk.Treeview):
         super().__init__(*args,**kwargs)
 
         self.heading("Número", text="Número")
-        self.heading("Data", text="Data")
+        self.heading("Data", text="Emissão")
         self.heading("Valor", text="Valor")
         self.heading("Cliente", text="Cliente")
         self.heading("Devedor", text="Devedor")
