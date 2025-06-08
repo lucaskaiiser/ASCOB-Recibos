@@ -3,3 +3,4 @@ db.sqlite
 __pycache__
 db_bkp.sqlite
 todo.txt
+bin
