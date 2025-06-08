@@ -14,9 +14,9 @@ class SearchReceiptWindow(tk.Toplevel):
         )
 
         self.wait_visibility()
-        x = self.wm.root.winfo_x() + self.wm.root.winfo_width() // 2 - self.winfo_width() // 2
-        y = self.wm.root.winfo_y() + self.wm.root.winfo_height() // 2 - self.winfo_height() // 2
-        self.geometry(f'+{x}+{y}')
+        x = self.wm.root.winfo_width() // 2 - self.winfo_width() // 2
+        y = self.wm.root.winfo_height() // 2 - self.winfo_height() // 2
+        self.geometry(f'+{self.wm.root.winfo_x()}x{self.wm.root.winfo_y()}+{x}+{y}')
 
         self.search_receipt_form = SearchReceiptForm(master=self, wm=self.wm)
         self.search_receipt_form.grid(row=0, column=0, sticky='w',)
