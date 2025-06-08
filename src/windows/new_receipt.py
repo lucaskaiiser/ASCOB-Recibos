@@ -46,15 +46,15 @@ class CreateReceiptForm(ttk.Frame):
 
         fields = [
             ("Cliente", "client_name"),
-            ("Valor", "value"),
             #("Por Extenso", "por_extenso"),
             ("Devedor", "debtor"),
             ("Endereço", "address"),
+            ("Valor", "value"),
             #("Número do Boleto", "bill_number"),
             #("Vencimento do Boleto", "bill_due_date"),
             #("Parcela", "installment_number"),
             #("Vencimento da Parcela", "installment_due_date"),
-            ("Data do Pagamento", "payment_date"),
+            #("Data do Pagamento", "payment_date"),
             ("Cobrador", "cobrador"),
             #("Observações", "description"),
         ]

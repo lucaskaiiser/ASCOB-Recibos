@@ -113,6 +113,9 @@
         
         .long-text {
             min-height:150px ;
+            width: 100%;
+            font-size: 16px;
+            
             
         }
 
@@ -164,7 +167,7 @@
 
         .receipt-control-container {
             height: 50%;
-            font-size: 25px;
+            font-size: 20px;
             
         }
     </style>
@@ -178,7 +181,7 @@
                 <div style="font-size: 18px; margin: 0; padding: 0;"><strong>ASCOB - Serviços de Cobrança e Assessoria Jurídica S/C</strong></div>
                 <div>CNPJ: 02.944.287/0001-33</div>
                 <div>Travessa S-1 n64 - Japiim 1 - CEP:69.078-510</div>
-                <div><strong>Fone/Fax..:: (92) 3629-6848 / 3232-6499 Cel: 91428493</strong></div>
+                <div><strong>Fone: (92) 99142-8493 / (92) 99142-8490</strong></div>
                 <div class="enterprise-last-line">
                     <div>Manaus</div>
                     <div>Email: ascobmanaus@hotmail.com</div>
@@ -223,8 +226,8 @@
                 <div class="info-label long-text-label">
                     Referente a
                 </div>
-                <div class="info-data long-text">
-                    {{description}}
+                <div class="info-data">
+                    <div class="long-text">{{description}}</div>
                 </div>
             </div>
         </div>
@@ -287,6 +290,7 @@
             display: flex;
             justify-content: space-between;
             width: 100%;
+            gap: 10px
         }
 
         .receipt-control-end {
@@ -295,7 +299,7 @@
             justify-content: center;
             align-items: center;
             bottom: 0;
-            gap: 40px;
+            gap: 80px;
             width: 100%;
         }
 
@@ -324,7 +328,10 @@
                 </div>
                 <div class="control-data">Emitido...: {{today}}</div>
                 <div class="control-data">Recebemos de(o)...: {{debtor}}</div>
-                <div class="control-data long-text">Referente ...: {{description}}</div>
+                <div class="control-data">
+                    <div>Referente ...:</div>
+                    <div class="long-text"> {{description}}</div>
+                </div>
             </div>
             <div class="receipt-control-end">
                 <div class="control-data left">

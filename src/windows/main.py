@@ -38,13 +38,13 @@ class MainWindow(ThemedTk):
         self.enterprise_frame.grid(
             row=0, column=0, sticky="nsew", pady=10,
         )
-        self.actions_frame = ActionsFrame(master=self, wm=self.wm)
-        self.actions_frame.grid(
-            row=1, column=0, sticky="nsew",
-        )
         self.receipts_frame = ReceiptsFrame(master=self, wm=self.wm)
         self.receipts_frame.grid(
             row=2, column=0, sticky="nsew", pady=10,
+        )
+        self.actions_frame = ActionsFrame(master=self, wm=self.wm)
+        self.actions_frame.grid(
+            row=1, column=0, sticky="nsew",
         )
 
 class EnterpriseFrame(ttk.Frame):
@@ -107,7 +107,8 @@ class ActionsFrame(ttk.Frame):
         self.search_receipt.grid(row=1, column=2, padx=10)
         self.print_receipt = ttk.Button(
             self,
-            text='Imprimir'
+            text='Imprimir',
+            command=self.master.receipts_frame.print_receipt
         )
         self.print_receipt.grid(row=1, column=3, padx=10)
 
@@ -143,7 +144,7 @@ class ReceiptsFrame(ttk.Frame):
         scrollbar.config(command=tree.yview)
 
         tree.heading("Número", text="Número")
-        tree.heading("Data", text="Emissão")
+        tree.heading("Data", text="Criação")
         tree.heading("Valor", text="Valor")
         tree.heading("Cliente", text="Cliente")
         tree.heading("Devedor", text="Devedor")
@@ -178,12 +179,18 @@ class ReceiptsFrame(ttk.Frame):
             receipt = self.wm.controller.get_receipt(item)
             self.wm.show_edit_receipt_window(receipt.__data__,master = self.master)
     
+    def print_receipt(self):
+        item = self.tree.focus()
+        if item:
+            receipt = self.wm.controller.get_receipt(item)
+            self.wm.controller.render_pdf(receipt.__data__)
+    
 class ReceiptTreeView(ttk.Treeview):
     def __init__(self, *args, **kwargs):
         super().__init__(*args,**kwargs)
 
         self.heading("Número", text="Número")
-        self.heading("Data", text="Emissão")
+        self.heading("Data", text="Criação")
         self.heading("Valor", text="Valor")
         self.heading("Cliente", text="Cliente")
         self.heading("Devedor", text="Devedor")

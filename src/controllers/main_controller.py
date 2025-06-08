@@ -1,5 +1,6 @@
 from src.models import Receipt
 from datetime import datetime
+from src.managers.print_manager import print_manager
 
 def get_receipt(receipt_id):
     return Receipt.get_by_id(receipt_id)
@@ -64,4 +65,6 @@ def edit_receipt(receipt_id, new_data):
 
     print(query)
     query.execute()
-    
+
+def render_pdf(receipt_data):
+    print_manager.render_pdf(receipt_data)
