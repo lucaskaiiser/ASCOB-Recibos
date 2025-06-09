@@ -11,15 +11,15 @@ class MainWindow(ThemedTk):
         super().__init__(theme='arc',*args, **kwargs)
         style = ttk.Style()
         style.configure("Treeview", font=("Arial", 10))  
-        style.configure("Treeview.Heading", font=("Arial", 12, "bold"))
+        style.configure("Treeview.Heading", font=("Arial", 10))
         style.configure("TButton", focuscolor="ffffff")
-        icon = ImageTk.PhotoImage(file="src/static/pngegg.png")
-        self.iconphoto(False, icon)
+        icon = ImageTk.PhotoImage(file="src/static/pngegg.ico")
+        self.iconphoto(True, icon)
         #style.configure('TFrame', background="#ffffff")
         #style.configure('TLabel', background="#ffffff")
         #style.configure('TopLevel', background="#ffffff")
         self.wm = wm
-        self.title('SISTEMA DE RECIBOS')
+        self.title('ASCOB')
         self.resizable(True, True)
         self.minsize(800, 600)
         
@@ -53,20 +53,20 @@ class EnterpriseFrame(ttk.Frame):
         self.wm = wm
         
         self.logo = Image.open('src/static/pngegg.png')
-        self.logo = self.logo.resize((40, 40))
+        self.logo = self.logo.resize((80, 60))
         self.logo = ImageTk.PhotoImage(self.logo)
 
         self.image = tk.Label(self, image=self.logo)
         self.image.configure(
             background=background_color
         )
-        self.image.grid(row=0, column=0)
+        self.image.grid(row=0, column=0, sticky='wns')
         ttk.Label(
             self,
             text='ASCOB - Sistema de Armazenamento e Emissão de Recibos',
-            font=('Red Hat Display', 18, 'bold') 
+            font=('Arial', 14) 
             
-        ).grid(row=0, column=1)
+        ).grid(row=0, column=1, sticky='sn')
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=4) 
@@ -183,7 +183,7 @@ class ReceiptsFrame(ttk.Frame):
         item = self.tree.focus()
         if item:
             receipt = self.wm.controller.get_receipt(item)
-            self.wm.controller.render_pdf(receipt.__data__)
+            self.wm.controller.print_pdf(receipt.__data__)
         else:
             messagebox.showinfo(message='Nenhum recibo selecionado')
             

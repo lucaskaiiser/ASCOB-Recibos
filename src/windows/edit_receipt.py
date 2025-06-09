@@ -16,7 +16,7 @@ class EditReceiptWindow(tk.Toplevel):
         )
 
         self.form_title = ttk.Label(self, text="Editar Recibo",  font=('Red Hat Display', 16))
-        self.form_title.grid(row=0, column=0,sticky='w',pady=20)
+        self.form_title.grid(row=0, column=0,sticky='w',pady=10)
         self.edit_receipt_form = EditReceiptForm(self, receipt_data)
         self.edit_receipt_form.grid(row=1, column=0, sticky='ns', padx=10)
 
@@ -64,7 +64,7 @@ class EditReceiptWindow(tk.Toplevel):
         try:
             new_data['value'] = round(float(new_data['value']),2)
         except ValueError as err:
-            messagebox.showerror(message='Valor deve ser no formato inteiro.fração')
+            messagebox.showerror(message='O campo "Valor" deve ser no formato real.centavo')
             return
         except Exception as err:
             messagebox.showerror(message=str(err))

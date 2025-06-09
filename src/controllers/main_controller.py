@@ -72,3 +72,6 @@ def edit_receipt(receipt_id, new_data):
 
 def render_pdf(receipt_data):
     print_manager.render_pdf(receipt_data)
+
+def print_pdf(receipt_data):
+    print_manager.print_pdf_async(receipt_data)
