@@ -4,14 +4,14 @@ import os
 from num2words import num2words
 from babel.dates import format_date
 from datetime import date
-import tempfile
+
 #import win32api
 
 base_dir = os.path.dirname(__file__)
 templates_dir = os.path.join(os.path.dirname(__file__), "templates")
 static_dir =  os.path.join(os.path.dirname(__file__), "static")
 env = Environment(loader=FileSystemLoader(templates_dir))
-template = env.get_template("receipt.html")
+template = env.get_template("receipt_cm.html")
 
 def _format_today():
     today = date.today()

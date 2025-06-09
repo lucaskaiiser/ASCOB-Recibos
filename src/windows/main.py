@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from ttkthemes import ThemedTk
 from PIL import Image, ImageTk
 
@@ -184,6 +184,9 @@ class ReceiptsFrame(ttk.Frame):
         if item:
             receipt = self.wm.controller.get_receipt(item)
             self.wm.controller.render_pdf(receipt.__data__)
+        else:
+            messagebox.showinfo(message='Nenhum recibo selecionado')
+            
     
 class ReceiptTreeView(ttk.Treeview):
     def __init__(self, *args, **kwargs):
