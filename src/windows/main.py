@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from ttkthemes import ThemedTk
 from PIL import Image, ImageTk
+from pathlib import Path
+
+base_dir = Path(__file__).parent.parent.parent
 
 frame_color = '#575555'
 background_color = '#F5F6F7'
@@ -13,7 +16,7 @@ class MainWindow(ThemedTk):
         style.configure("Treeview", font=("Arial", 10))  
         style.configure("Treeview.Heading", font=("Arial", 10))
         style.configure("TButton", focuscolor="ffffff")
-        icon = ImageTk.PhotoImage(file="src/static/pngegg.ico")
+        icon = ImageTk.PhotoImage(file=str(base_dir / 'static' / 'pngegg.ico'))
         self.iconphoto(True, icon)
         #style.configure('TFrame', background="#ffffff")
         #style.configure('TLabel', background="#ffffff")
@@ -52,7 +55,7 @@ class EnterpriseFrame(ttk.Frame):
         super().__init__(*args,**kwargs)
         self.wm = wm
         
-        self.logo = Image.open('src/static/pngegg.png')
+        self.logo = Image.open(str(base_dir / 'static' / 'pngegg.png'))
         self.logo = self.logo.resize((80, 60))
         self.logo = ImageTk.PhotoImage(self.logo)
 
@@ -81,17 +84,17 @@ class ActionsFrame(ttk.Frame):
             text='Novo Recibo',
             command=lambda: self.wm.show_new_receipt_window(master = self.master)
         )
-        self.new_image = Image.open('src/static/new.png')
+        self.new_image = Image.open(str(base_dir / 'static' /'new.png'))
         self.new_image = ImageTk.PhotoImage(self.new_image)
             
         ttk.Label(self, image=self.new_image).grid(row=0, column=0)
 
-        self.search_image = Image.open('src/static/search.png')
+        self.search_image = Image.open(str(base_dir / 'static' / 'search.png'))
         self.search_image = ImageTk.PhotoImage(self.search_image)
             
         ttk.Label(self, image=self.search_image).grid(row=0, column=2)
 
-        self.print_image = Image.open('src/static/print.png')
+        self.print_image = Image.open(str(base_dir / 'static' / 'print.png'))
         self.print_image = ImageTk.PhotoImage(self.print_image)
             
         ttk.Label(self, image=self.print_image).grid(row=0, column=3)

@@ -4,14 +4,15 @@ import os
 from num2words import num2words
 from babel.dates import format_date
 from datetime import date
-import win32api
+#import win32api
 import tempfile
 import threading
-#import win32api
+import win32api
+from pathlib import Path
 
-base_dir = os.path.dirname(__file__)
-templates_dir = os.path.join(os.path.dirname(__file__), "templates")
-static_dir =  os.path.join(os.path.dirname(__file__), "static")
+base_dir = Path(__file__).parent.parent.parent
+templates_dir = base_dir / 'templates'
+static_dir =  base_dir / 'static'
 env = Environment(loader=FileSystemLoader(templates_dir))
 template = env.get_template("receipt_cm.html")
 
@@ -80,7 +81,7 @@ def print_pdf(receipt_data):
     import subprocess
     data_dict = _create_receipt_data_dict(receipt_data)
     html_str = template.render(**data_dict)
-    sumatra_path = os.path.join(base_dir, 'bin', 'sumatra.exe')
+    sumatra_path = base_dir / 'bin' / 'sumatra.exe'
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
         pdf_path = f'{temp_pdf.name}-{id(temp_pdf)}'

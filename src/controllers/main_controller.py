@@ -1,6 +1,6 @@
 from src.models import Receipt
 from datetime import datetime
-from src.managers.print_manager import print_manager
+from src.managers import print_manager
 
 def get_receipt(receipt_id):
     return Receipt.get_by_id(receipt_id)
