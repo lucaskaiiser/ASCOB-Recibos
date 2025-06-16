@@ -186,7 +186,11 @@ class ReceiptsFrame(ttk.Frame):
         item = self.tree.focus()
         if item:
             receipt = self.wm.controller.get_receipt(item)
-            self.wm.controller.print_pdf(receipt.__data__)
+            confirmation = messagebox.askyesno(
+                message=f'Confirmar impressão do registro {receipt.id}?'
+            )
+            if confirmation:
+                self.wm.controller.print_pdf(receipt.__data__)
         else:
             messagebox.showinfo(message='Nenhum recibo selecionado')
             

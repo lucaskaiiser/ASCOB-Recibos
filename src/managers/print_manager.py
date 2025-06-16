@@ -44,11 +44,11 @@ def _convert_float_to_br_finance(value:float):
 def _create_receipt_data_dict(receipt_data):
     dados = {
         "receipt_id": str(receipt_data['id']).zfill(7),
-        "debtor": receipt_data['debtor'],
+        "debtor": receipt_data['debtor'].upper(),
         "value": _convert_float_to_br_finance(receipt_data['value']),
         "extenso": _convert_value_to_words(receipt_data['value']),
-        "address": receipt_data['address'],
-        "description": receipt_data['description'],
+        "address": receipt_data['address'].upper(),
+        "description": receipt_data['description'].upper(),
         "cobrador": receipt_data['cobrador'].upper(),
         "logo_dir": 'static/logo.png',
         "today": _format_today()

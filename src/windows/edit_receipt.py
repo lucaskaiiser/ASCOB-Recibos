@@ -126,6 +126,16 @@ class EditReceiptForm(ttk.Frame):
         self.inputs.update(
                 {'description': entry}
             )
+        
+        ### Text "Referente A" Limitation
+        def limitar_texto(event):
+            MAX_CHARS = 255
+            conteudo = self.inputs['description'].get("1.0", "end-1c")
+            if len(conteudo) >= MAX_CHARS and event.keysym != 'BackSpace':
+                return "break"
+        
+        self.inputs['description'].bind("<Key>", limitar_texto)
+        ###
 
         self.old_data = self.get_form_values()
         self.grid_columnconfigure(0, weight=1)
