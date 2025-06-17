@@ -10,24 +10,27 @@ frame_color = '#575555'
 background_color = '#F5F6F7'
 
 class MainWindow(ThemedTk):
+    
     def __init__(self, wm, *args, **kwargs):
-        super().__init__(theme='arc',*args, **kwargs)
+        super().__init__(theme='arc', *args, **kwargs)
+
+        self.withdraw()
+
         style = ttk.Style()
         style.configure("Treeview", font=("Arial", 10))  
         style.configure("Treeview.Heading", font=("Arial", 10))
         style.configure("TButton", focuscolor="ffffff")
+
         icon = ImageTk.PhotoImage(file=str(base_dir / 'static' / 'pngegg.ico'))
         self.iconphoto(True, icon)
-        #style.configure('TFrame', background="#ffffff")
-        #style.configure('TLabel', background="#ffffff")
-        #style.configure('TopLevel', background="#ffffff")
+
         self.wm = wm
         self.title('ASCOB')
         self.resizable(True, True)
         self.minsize(800, 600)
-        
+
         self.config(
-            background= background_color,
+            background=background_color,
             padx=20,
             pady=20
         )
@@ -38,17 +41,29 @@ class MainWindow(ThemedTk):
         self.grid_rowconfigure(2, weight=10)
 
         self.enterprise_frame = EnterpriseFrame(master=self, wm=self.wm)
-        self.enterprise_frame.grid(
-            row=0, column=0, sticky="nsew", pady=10,
-        )
+        self.enterprise_frame.grid(row=0, column=0, sticky="nsew", pady=10)
+
         self.receipts_frame = ReceiptsFrame(master=self, wm=self.wm)
-        self.receipts_frame.grid(
-            row=2, column=0, sticky="nsew", pady=10,
-        )
+        self.receipts_frame.grid(row=2, column=0, sticky="nsew", pady=10)
+
         self.actions_frame = ActionsFrame(master=self, wm=self.wm)
-        self.actions_frame.grid(
-            row=1, column=0, sticky="nsew",
-        )
+        self.actions_frame.grid(row=1, column=0, sticky="nsew")
+
+        self.after(100, self._center_and_show)
+    
+    def _center_and_show(self):
+        self.update_idletasks()
+        width = self.winfo_width()
+        height = self.winfo_height()
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        self.geometry(f"{width}x{height}+{x}+{y}")
+
+        self.deiconify()  # Exibe a janela centralizada
+        self.focus_force()
 
 class EnterpriseFrame(ttk.Frame):
     def __init__(self, wm, *args, **kwargs):

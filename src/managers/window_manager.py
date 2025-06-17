@@ -20,13 +20,27 @@ class WindowManager:
         if master:
             window.transient(master)
 
-        def grab_and_wait():
+        window.withdraw()  
+
+        def center_window_and_show():
+            window.update_idletasks()  
+            width = window.winfo_width()
+            height = window.winfo_height()
+            screen_width = window.winfo_screenwidth()
+            screen_height = window.winfo_screenheight()
+
+            x = (screen_width // 2) - (width // 2)
+            y = (screen_height // 2) - (height // 2)
+            window.geometry(f'{width}x{height}+{x}+{y}')
+
+            window.deiconify()
             window.grab_set()
             window.focus_set()
             (master or window.master).wait_window(window)
 
-        window.after(100, grab_and_wait)
+        window.after(100, center_window_and_show)
         window.resizable(False, False)
+
 
     def show_new_receipt_window(self, master=None):
         window = NewReceiptWindow(wm=self, master=master)
