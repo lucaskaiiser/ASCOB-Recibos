@@ -26,11 +26,6 @@ class NewReceiptWindow(tk.Toplevel):
 
         self.actions_form = ActionsCreateReceipt(master =self, wm=self.wm)
         self.actions_form.grid(row=3, column=0 )
-
-        self.emission_date = ttk.Label(
-            self,
-            text=f'Data de emissão: {datetime.now().date().strftime('%d/%m/%Y')}')
-        self.emission_date.grid(row=2, column=0, sticky='w', pady=10)
         
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -57,6 +52,7 @@ class CreateReceiptForm(ttk.Frame):
             #("Data do Pagamento", "payment_date"),
             ("Cobrador", "cobrador"),
             #("Observações", "description"),
+            
         ]
 
         for i, (label_text, field_name) in enumerate(fields):
@@ -68,11 +64,19 @@ class CreateReceiptForm(ttk.Frame):
             self.inputs[field_name] = entry
 
         label = ttk.Label(self, text='Descrição')
-        label.grid(row=len(fields), column=0, sticky='nw', padx=10)
+        label.grid(row=len(fields), column=0, sticky='nw', padx=10, pady=10)
         entry = tk.Text(self, width=27, height=10, font=("Arial", 8))
-        entry.grid(row=len(fields), column=1, sticky='wnes')
+        entry.grid(row=len(fields), column=1, sticky='wnes', pady=10)
 
         self.inputs['description'] = entry
+
+        label = ttk.Label(self, text='Data Emissão')
+        label.grid(row=len(fields)+1, column=0, sticky='nw', padx=10, pady=10)
+        entry_date = ttk.Entry(self, width=40)
+        entry_date.grid(row=len(fields)+1, column=1, sticky='wnes', pady=10)
+        entry_date.insert(0,datetime.now().date().strftime('%d/%m/%Y'))
+
+        self.inputs['date'] = entry_date
 
         ### Text "Referente A" Limitation
         def limitar_texto(event):
@@ -122,10 +126,16 @@ class CreateReceiptForm(ttk.Frame):
         except Exception as err:
             messagebox.showerror(message=str(err))
             return
+
+        try:
+            values_dict['date'] = datetime.strptime(values_dict['date'], '%d/%m/%Y').date()
+        except ValueError:
+            messagebox.showerror(message='Insira a data no formato dia/mês/ano')
+            return 
+
         try:
             
             receipt = Receipt.create(
-                date=datetime.now(),
                 **values_dict
                 )
             self.master.master.receipts_frame.refresh_tree()

@@ -62,6 +62,12 @@ class EditReceiptWindow(tk.Toplevel):
             return
 
         try:
+            new_data['date'] = datetime.strptime(new_data['date'], '%d/%m/%Y').date()
+        except ValueError:
+            messagebox.showerror(message='Insira a data no formato dia/mês/ano')
+            return
+
+        try:
             new_data['value'] = round(float(new_data['value']),2)
         except ValueError as err:
             messagebox.showerror(message='O campo "Valor" deve ser no formato real.centavo')
@@ -117,6 +123,7 @@ class EditReceiptForm(ttk.Frame):
             self.inputs.update(
                 {field_name: entry }
             )
+
         
         label = ttk.Label(self, text='Descrição')
         label.grid(row=len(fields), column=0, sticky='nw', padx=10)
@@ -126,6 +133,14 @@ class EditReceiptForm(ttk.Frame):
         self.inputs.update(
                 {'description': entry}
             )
+
+        label = ttk.Label(self, text='Data Emissão')
+        label.grid(row=len(fields)+1, column=0, sticky='nw', padx=10, pady=10)
+        entry_date = ttk.Entry(self, width=40)
+        entry_date.grid(row=len(fields)+1, column=1, sticky='wnes', pady=10)
+        entry_date.insert(0,receipt_data['date'].strftime('%d/%m/%Y'))
+
+        self.inputs['date'] = entry_date
         
         ### Text "Referente A" Limitation
         def limitar_texto(event):
