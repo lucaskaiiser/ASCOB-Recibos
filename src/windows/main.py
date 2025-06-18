@@ -17,17 +17,24 @@ class MainWindow(ThemedTk):
         self.withdraw()
 
         style = ttk.Style()
-        style.configure("Treeview", font=("Arial", 10))  
+        style.configure("Treeview", font=("Arial", 10), rowheight=40)  
         style.configure("Treeview.Heading", font=("Arial", 10))
         style.configure("TButton", focuscolor="ffffff")
+        style.configure("TLabel", font=("Arial", 10))
+        
 
+        style.map("Treeview",
+            foreground=[("selected", "black")],
+            background=[("selected", "#CBDFEE")]
+        )
+    
         icon = ImageTk.PhotoImage(file=str(base_dir / 'static' / 'pngegg.ico'))
         self.iconphoto(True, icon)
 
         self.wm = wm
         self.title('ASCOB')
         self.resizable(True, True)
-        self.minsize(800, 600)
+        self.minsize(1200, 600)
 
         self.config(
             background=background_color,
@@ -161,11 +168,11 @@ class ReceiptsFrame(ttk.Frame):
         tree.grid(row=0, column=0, sticky="nsew")
         scrollbar.config(command=tree.yview)
 
-        tree.heading("Número", text="Número")
-        tree.heading("Data", text="Criação")
-        tree.heading("Valor", text="Valor")
-        tree.heading("Cliente", text="Cliente")
-        tree.heading("Devedor", text="Devedor")
+        tree.heading("Número", text="Número", anchor="w")
+        tree.heading("Data", text="Criação", anchor="w")
+        tree.heading("Valor", text="Valor", anchor="w")
+        tree.heading("Cliente", text="Cliente", anchor="w")
+        tree.heading("Devedor", text="Devedor", anchor="w")
 
         tree.column("Número", width=30)
         tree.column("Data", width=80)
@@ -202,7 +209,7 @@ class ReceiptsFrame(ttk.Frame):
         if item:
             receipt = self.wm.controller.get_receipt(item)
             confirmation = messagebox.askyesno(
-                message=f'Confirmar impressão do registro {receipt.id}?'
+                message=f'Confirmar impressão do recibo {receipt.id}?'
             )
             if confirmation:
                 self.wm.controller.print_pdf(receipt.__data__)
@@ -215,7 +222,7 @@ class ReceiptTreeView(ttk.Treeview):
         super().__init__(*args,**kwargs)
 
         self.heading("Número", text="Número")
-        self.heading("Data", text="Criação")
+        self.heading("Data", text="Emissão")
         self.heading("Valor", text="Valor")
         self.heading("Cliente", text="Cliente")
         self.heading("Devedor", text="Devedor")

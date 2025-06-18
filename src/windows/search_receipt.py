@@ -1,6 +1,6 @@
 from .main import tk, ttk
 from tkinter import messagebox
-
+from src.windows.theme.custom import ArcEntry
 
 class SearchReceiptWindow(tk.Toplevel):
     def __init__(self, wm,*args, **kwargs):
@@ -44,17 +44,17 @@ class SearchReceiptWindow(tk.Toplevel):
         self.tree.bind("<Return>", self.on_double_click)
         scrollbar.config(command=self.tree.yview)
 
-        self.tree.heading("Número", text="Número")
-        self.tree.heading("Data", text="Criação")
-        self.tree.heading("Valor", text="Valor")
-        self.tree.heading("Cliente", text="Cliente")
-        self.tree.heading("Devedor", text="Devedor")
+        self.tree.heading("Número", text="Número", anchor="w")
+        self.tree.heading("Data", text="Emissão", anchor="w")
+        self.tree.heading("Valor", text="Valor", anchor="w")
+        self.tree.heading("Cliente", text="Cliente", anchor="w")
+        self.tree.heading("Devedor", text="Devedor", anchor="w")
 
-        self.tree.column("Número", width=80)
-        self.tree.column("Data", width=80)
-        self.tree.column("Valor", width=80)
-        self.tree.column("Cliente", width=200)
-        self.tree.column("Devedor", width=200)
+        self.tree.column("Número", width=100)
+        self.tree.column("Data", width=120)
+        self.tree.column("Valor", width=150)
+        self.tree.column("Cliente", width=250)
+        self.tree.column("Devedor", width=250)
 
         return self.tree
     
@@ -66,10 +66,10 @@ class SearchReceiptWindow(tk.Toplevel):
     def on_double_click(self,event):
         item = self.result_tree.focus()
         if item:            
-            #receipt = self.wm.controller.get_receipt(item)
-            #print(receipt)
-            #self.wm.show_edit_receipt_window(receipt.__data__, master=self)
-            self.destroy()
+            receipt = self.wm.controller.get_receipt(item)
+            print(receipt)
+            self.wm.show_edit_receipt_window(receipt.__data__, master=self)
+            
             self.wm.root.receipts_frame.tree.selection_set(item)
             self.wm.root.receipts_frame.tree.focus(item)
             self.wm.root.receipts_frame.tree.see(item)
@@ -120,7 +120,15 @@ class SearchReceiptWindow(tk.Toplevel):
             self.result_tree.insert("", tk.END, values=item, iid=item[0])    
 
     def refresh_tree(self):
-        print('refresh tree')  
+        for item in self.result_tree.get_children():
+            self.result_tree.delete(item)
+
+        print('search')
+    
+        data = self.wm.controller.get_all_receipts()
+
+        for item in data:
+            self.result_tree.insert("", tk.END, values=item, iid=item[0])
 
 class SearchReceiptForm(ttk.Frame):
     def __init__(self, wm, *args, **kwargs):
@@ -138,7 +146,7 @@ class SearchReceiptForm(ttk.Frame):
             label = ttk.Label(self, text=field_name)
             label.grid(row=i, column=0, sticky='nsew', padx=10)
 
-            field = ttk.Entry(self, text=field_name)
+            field = ArcEntry(self, text=field_name)
             field.grid(row=i, column=1, sticky='nsew', pady=5)
             field.bind("<Return>", self.master.search)
             self.inputs[field_name] = field

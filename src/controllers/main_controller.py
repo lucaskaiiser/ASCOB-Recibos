@@ -19,6 +19,7 @@ def get_all_receipts():
     for item in receipts:
         item = list(item)
         item[1] = item[1].strftime('%d/%m/%Y')
+        item[2] = 'R$ ' + print_manager._convert_float_to_br_finance(item[2])
         results.append(item)
     return results
 
@@ -49,6 +50,7 @@ def search_receipts(client=None, debtor=None, date=None):
     for item in query.tuples():
         item = list(item)
         item[1] = item[1].strftime('%d/%m/%Y')
+        item[2] = 'R$ ' + print_manager._convert_float_to_br_finance(item[2])
         results.append(item)
 
     return results

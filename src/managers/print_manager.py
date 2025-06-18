@@ -48,11 +48,13 @@ def _create_receipt_data_dict(receipt_data):
         "value": _convert_float_to_br_finance(receipt_data['value']),
         "extenso": _convert_value_to_words(receipt_data['value']),
         "address": receipt_data['address'].upper(),
-        "description": receipt_data['description'].upper(),
+        "description": receipt_data['description'].upper().replace('\n','<br>'),
         "cobrador": receipt_data['cobrador'].upper(),
         "logo_dir": 'static/logo.png',
         "today": _format_today()
     }
+
+    
 
     return dados
 

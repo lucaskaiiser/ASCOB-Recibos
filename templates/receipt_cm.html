@@ -27,7 +27,7 @@
             flex-direction: column;
             gap: 0.26cm;
             padding-bottom: 0.53cm;
-            border: 0.05cm solid black;
+            border: 0.03cm solid black;
             height: 50%;
             justify-content: space-between;
         }
@@ -37,7 +37,7 @@
             justify-content: center;
             text-align: center;
             width: 2.65cm;
-            border-right: 0.05cm solid black;
+            border-right: 0.03cm solid black;
         }
 
         .logo-container img {
@@ -80,6 +80,7 @@
             flex-direction: column;
             justify-content: space-between;
             border-left: 0.03cm solid black;
+            font-size: 0.4cm;
             height: 100%;
             padding: 0.26cm;
             box-sizing: border-box;
@@ -88,7 +89,7 @@
 
         .payment-value {
             margin: 0.13cm;
-            font-size: 0.53cm;
+            font-size: 0.43cm;
         }
         .info {
             display: flex;
@@ -99,7 +100,7 @@
         }
         .info-container {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             width: 100%;
             
         }
@@ -112,13 +113,13 @@
         
         .info-data {
             width: 77%;
-            background-color: #f2f2f2;
+            background-color: #e8e8e8;
         }
         
         .long-text {
-            min-height:3.97cm ;
+            height:3.50cm ;
             width: 100%;
-            font-size: 0.42cm;
+            font-size: 0.35cm;
             
             
         }
@@ -295,7 +296,6 @@
             display: flex;
             justify-content: space-between;
             width: 100%;
-            gap: 0.26cm
         }
 
         .receipt-control-end {
@@ -334,7 +334,7 @@
                 <div class="control-data">Emitido...: {{today}}</div>
                 <div class="control-data">Recebemos de(o)...: {{debtor}}</div>
                 <div class="control-data">
-                    <div>Referente ...:</div>
+                    <div style="margin-right: 0.2cm;">Referente ...: </div>
                     <div class="long-text"> {{description}}</div>
                 </div>
             </div>

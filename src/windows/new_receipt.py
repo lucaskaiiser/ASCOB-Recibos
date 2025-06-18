@@ -1,6 +1,7 @@
 from .main import tk, ttk
 from tkinter import messagebox
 from datetime import datetime
+from src.windows.theme.custom import ArcEntry, ArcText
 
 class NewReceiptWindow(tk.Toplevel):
     def __init__(self,wm,*args, **kwargs):
@@ -58,21 +59,21 @@ class CreateReceiptForm(ttk.Frame):
         for i, (label_text, field_name) in enumerate(fields):
             label = ttk.Label(self, text=label_text)
             label.grid(row=i, column=0, sticky='we', padx=10)
-            entry = ttk.Entry(self, width=40)
+            entry = ArcEntry(self, width=40)
             entry.grid(row=i, column=1, sticky='w', pady=5)
 
             self.inputs[field_name] = entry
 
         label = ttk.Label(self, text='Descrição')
         label.grid(row=len(fields), column=0, sticky='nw', padx=10, pady=10)
-        entry = tk.Text(self, width=27, height=10, font=("Arial", 8))
+        entry = ArcText(self, width=27, height=10)
         entry.grid(row=len(fields), column=1, sticky='wnes', pady=10)
 
         self.inputs['description'] = entry
 
         label = ttk.Label(self, text='Data Emissão')
         label.grid(row=len(fields)+1, column=0, sticky='nw', padx=10, pady=10)
-        entry_date = ttk.Entry(self, width=40)
+        entry_date = ArcEntry(self, width=40)
         entry_date.grid(row=len(fields)+1, column=1, sticky='wnes', pady=10)
         entry_date.insert(0,datetime.now().date().strftime('%d/%m/%Y'))
 
@@ -80,7 +81,7 @@ class CreateReceiptForm(ttk.Frame):
 
         ### Text "Referente A" Limitation
         def limitar_texto(event):
-            MAX_CHARS = 255
+            MAX_CHARS = 355
             conteudo = self.inputs['description'].get("1.0", "end-1c")
             if len(conteudo) >= MAX_CHARS and event.keysym != 'BackSpace':
                 return "break"
@@ -94,10 +95,10 @@ class CreateReceiptForm(ttk.Frame):
         
     def get_form_values(self):
         values_dict = {
-            field_name:entry.get() for field_name,entry in self.inputs.items() if field_name != 'description'
+            field_name:entry.get().upper() for field_name,entry in self.inputs.items() if field_name != 'description'
         }
         values_dict.update({
-            'description': self.inputs['description'].get("1.0", "end-1c")
+            'description': self.inputs['description'].get("1.0", "end-1c").upper()
         })
         return(values_dict)
 
@@ -114,8 +115,6 @@ class CreateReceiptForm(ttk.Frame):
         except ValueError as err:
             messagebox.showerror(message=err)
             return
-
-        print('aaaaa', values_dict)
 
         try:
             values_dict['value'] = round(float(values_dict['value']),2)

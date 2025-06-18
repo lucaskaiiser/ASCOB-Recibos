@@ -1,6 +1,7 @@
 from .main import tk, ttk
 from tkinter import messagebox
 from datetime import datetime
+from src.windows.theme.custom import ArcEntry, ArcText
 
 class EditReceiptWindow(tk.Toplevel):
     def __init__(self, receipt_data,wm, *args, **kwargs):
@@ -61,21 +62,23 @@ class EditReceiptWindow(tk.Toplevel):
             messagebox.showerror(message=err)
             return
 
-        try:
-            new_data['date'] = datetime.strptime(new_data['date'], '%d/%m/%Y').date()
-        except ValueError:
-            messagebox.showerror(message='Insira a data no formato dia/mês/ano')
-            return
+        if list(old_data.values()) != list(new_data.values()):
 
-        try:
-            new_data['value'] = round(float(new_data['value']),2)
-        except ValueError as err:
-            messagebox.showerror(message='O campo "Valor" deve ser no formato real.centavo')
-            return
-        except Exception as err:
-            messagebox.showerror(message=str(err))
-            return
-        if old_data != new_data:
+            try:
+                new_data['date'] = datetime.strptime(new_data['date'], '%d/%m/%Y').date()
+            except ValueError:
+                messagebox.showerror(message='Insira a data no formato dia/mês/ano')
+                return
+
+            try:
+                new_data['value'] = round(float(new_data['value']),2)
+            except ValueError as err:
+                messagebox.showerror(message='O campo "Valor" deve ser no formato real.centavo')
+                return
+            except Exception as err:
+                messagebox.showerror(message=str(err))
+                return
+            
             confirmation = messagebox.askyesno(
                 title='Confirmar Alteração nos dados do recibo',
                 message=f'Deseja aplicar as alterações no recibo {self.receipt_data['id']}?'
@@ -83,11 +86,23 @@ class EditReceiptWindow(tk.Toplevel):
             if confirmation:
                 self.wm.controller.edit_receipt(self.receipt_data['id'], new_data)
                 self.wm.root.receipts_frame.refresh_tree()
+                try:
+                    self.master.refresh_tree()
+                    self.master.result_tree.selection_set(self.receipt_data['id'])
+                    self.master.result_tree.focus(self.receipt_data['id'])
+                except:
+                    pass
                 self.destroy()
+                self.wm.root.receipts_frame.tree.selection_set(self.receipt_data['id'])
+                self.wm.root.receipts_frame.tree.focus(self.receipt_data['id'])
             return
         messagebox.showinfo(
             message='Sem alterações para aplicar'
         )
+        
+    def confirm_edit_and_print_receipt(self):
+        self.edit_receipt()
+        self.master.wm.root.receipts_frame.print_receipt()
         
         
 class EditReceiptForm(ttk.Frame):
@@ -115,7 +130,7 @@ class EditReceiptForm(ttk.Frame):
             label = ttk.Label(self, text=label_text)
             label.grid(row=i, column=0, sticky='we', padx=10)
 
-            entry = ttk.Entry(self, width=40)
+            entry = ArcEntry(self, width=40)
             entry.grid(row=i, column=1, sticky='w', pady=5)
             print(receipt_data[field_name])
             self.inputs[field_name] = entry.insert(0,receipt_data[field_name] or '')
@@ -127,7 +142,7 @@ class EditReceiptForm(ttk.Frame):
         
         label = ttk.Label(self, text='Descrição')
         label.grid(row=len(fields), column=0, sticky='nw', padx=10)
-        entry = tk.Text(self, width=27, height=10, font=("Arial", 8))
+        entry = ArcText(self, width=27, height=10)
         entry.grid(row=len(fields), column=1, sticky='wnes', pady=5)
         entry.insert("1.0", receipt_data['description'] or '')
         self.inputs.update(
@@ -136,7 +151,7 @@ class EditReceiptForm(ttk.Frame):
 
         label = ttk.Label(self, text='Data Emissão')
         label.grid(row=len(fields)+1, column=0, sticky='nw', padx=10, pady=10)
-        entry_date = ttk.Entry(self, width=40)
+        entry_date = ArcEntry(self, width=40)
         entry_date.grid(row=len(fields)+1, column=1, sticky='wnes', pady=10)
         entry_date.insert(0,receipt_data['date'].strftime('%d/%m/%Y'))
 
@@ -144,7 +159,7 @@ class EditReceiptForm(ttk.Frame):
         
         ### Text "Referente A" Limitation
         def limitar_texto(event):
-            MAX_CHARS = 255
+            MAX_CHARS = 355
             conteudo = self.inputs['description'].get("1.0", "end-1c")
             if len(conteudo) >= MAX_CHARS and event.keysym != 'BackSpace':
                 return "break"
@@ -158,10 +173,10 @@ class EditReceiptForm(ttk.Frame):
 
     def get_form_values(self):
         values_dict = {
-            field_name:entry.get() for field_name,entry in self.inputs.items() if field_name != 'description'
+            field_name:entry.get().upper() for field_name,entry in self.inputs.items() if field_name != 'description'
         }
         values_dict.update({
-            'description': self.inputs['description'].get("1.0", "end-1c")
+            'description': self.inputs['description'].get("1.0", "end-1c").upper()
         })
         return values_dict
 
@@ -176,7 +191,7 @@ class ActionsEditReceipt(ttk.Frame):
         self.exclude_button = ttk.Button(self, text='Excluir', command=self.master.delete_receipt)
         self.exclude_button.grid(row=0, column=0, sticky='e', padx=10)
 
-        self.exit_button = ttk.Button(self, text='Sair', command=self.master.destroy)
+        self.exit_button = ttk.Button(self, text='Editar e Imprimir', command=self.master.confirm_edit_and_print_receipt)
         self.exit_button.grid(row=0, column=2)
 
         self.grid_rowconfigure(0, weight=1)
