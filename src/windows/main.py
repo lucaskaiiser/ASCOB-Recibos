@@ -32,7 +32,7 @@ class MainWindow(ThemedTk):
         self.iconphoto(True, icon)
 
         self.wm = wm
-        self.title('ASCOB')
+        self.title('ASCOB Recibos')
         self.resizable(True, True)
         self.minsize(1200, 600)
 
