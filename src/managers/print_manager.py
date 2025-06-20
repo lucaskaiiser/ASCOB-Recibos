@@ -16,10 +16,9 @@ static_dir =  base_dir / 'static'
 env = Environment(loader=FileSystemLoader(templates_dir))
 template = env.get_template("receipt_cm.html")
 
-def _format_today():
-    today = date.today()
+def _format_date(date: date):
     return f'Manaus, {
-        format_date(today, format='long', locale='pt_BR')
+        format_date(date, format='long', locale='pt_BR')
     }'
 
 def _convert_value_to_words(value:float):
@@ -51,7 +50,7 @@ def _create_receipt_data_dict(receipt_data):
         "description": receipt_data['description'].upper().replace('\n','<br>'),
         "cobrador": receipt_data['cobrador'].upper(),
         "logo_dir": 'static/logo.png',
-        "today": _format_today()
+        "today": _format_date(receipt_data['date'])
     }
 
     
